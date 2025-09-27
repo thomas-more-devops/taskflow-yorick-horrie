@@ -1,6 +1,4 @@
-/* ================================
-   RESET AND BASE STYLES
-   ================================ */
+/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -15,9 +13,7 @@ body {
     color: #333;
 }
 
-/* ================================
-   MAIN CONTAINER LAYOUT
-   ================================ */
+/* Container */
 .container {
     max-width: 800px;
     margin: 0 auto;
@@ -27,33 +23,29 @@ body {
     flex-direction: column;
 }
 
-/* ================================
-   HEADER SECTION STYLING
-   ================================ */
+/* Header */
 .header {
     text-align: center;
     margin-bottom: 3rem;
 }
 
-/* Glassmorphism effect for header content */
 .header-content {
-    background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
+    background: rgba(255, 255, 255, 0.95);
     padding: 2rem;
     border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); /* Soft shadow */
-    backdrop-filter: blur(10px); /* Glassmorphism blur effect */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
 }
 
-/* Main application title with icon layout */
 .app-title {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #4a5568; /* Dark gray text */
+    color: #4a5568;
     margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem; /* Space between icon and text */
+    gap: 0.5rem;
 }
 
 .icon {
@@ -66,58 +58,83 @@ body {
     font-weight: 400;
 }
 
-/* ================================
-   MAIN CONTENT AREA
-   ================================ */
+/* Main Content */
 .main {
     flex: 1;
 }
 
-/* ================================
-   TASK INPUT FORM SECTION
-   ================================ */
+/* Task Input Section */
 .task-input-section {
     margin-bottom: 2rem;
 }
 
-/* Container for task input form with glassmorphism */
 .input-container {
-    background: rgba(255, 255, 255, 0.95); /* Semi-transparent background */
+    background: rgba(255, 255, 255, 0.95);
     padding: 1.5rem;
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Elevated appearance */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     display: flex;
-    gap: 1rem; /* Space between input and button */
+    gap: 1rem;
     align-items: center;
 }
 
-/* Main task input field styling */
 .task-input {
-    flex: 1; /* Take up available space */
-    border: 2px solid #e2e8f0; /* Light gray border */
+    flex: 1;
+    border: 2px solid #e2e8f0;
     border-radius: 12px;
     padding: 1rem 1.5rem;
     font-size: 1rem;
-    font-family: inherit; /* Use parent font */
-    transition: all 0.3s ease; /* Smooth animations */
-    background: #f8fafc; /* Very light gray background */
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background: #f8fafc;
 }
 
-/* Focus state for task input with brand color */
 .task-input:focus {
-    outline: none; /* Remove default browser outline */
-    border-color: #667eea; /* Brand color border */
-    background: white; /* Pure white background on focus */
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); /* Subtle focus ring */
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .task-input::placeholder {
     color: #a0aec0;
 }
 
-/* Add task button with gradient background */
+/* Date Input Container */
+.date-input-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 180px;
+}
+
+.date-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #4a5568;
+    white-space: nowrap;
+}
+
+.date-input {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #f8fafc;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.date-input:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
 .add-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Brand gradient */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
     border-radius: 12px;
@@ -125,17 +142,16 @@ body {
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease; /* Smooth hover effects */
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    gap: 0.5rem; /* Space between icon and text */
-    white-space: nowrap; /* Prevent text wrapping */
+    gap: 0.5rem;
+    white-space: nowrap;
 }
 
-/* Hover effect for add button with lift animation */
 .add-btn:hover {
-    transform: translateY(-2px); /* Lift effect */
-    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3); /* Enhanced shadow */
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
 }
 
 .add-btn:active {
@@ -147,26 +163,73 @@ body {
     font-weight: bold;
 }
 
-/* ================================
-   TASKS DISPLAY SECTION
-   ================================ */
-/* Main container for tasks list with glassmorphism */
-.tasks-section {
-    background: rgba(255, 255, 255, 0.95); /* Semi-transparent background */
+/* Date Filter Section */
+.date-filter-section {
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 16px;
     padding: 1.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Elevated appearance */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
 }
 
-/* Header section for tasks list with divider */
+.filter-container h3 {
+    margin-bottom: 1rem;
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.date-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.filter-btn {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-btn:hover {
+    background: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #667eea;
+}
+
+.filter-icon {
+    font-size: 1rem;
+}
+
+/* Tasks Section */
+.tasks-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
 .tasks-header {
     display: flex;
-    justify-content: space-between; /* Title on left, count on right */
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 2px solid #f1f5f9; /* Subtle divider line */
+    border-bottom: 2px solid #f1f5f9;
 }
 
 .tasks-header h2 {
@@ -175,279 +238,485 @@ body {
     color: #2d3748;
 }
 
-/* Task count badge styling */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #4a5568;
+}
+
+.sort-select {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    background: white;
+    cursor: pointer;
+}
+
 .task-count {
-    background: #e2e8f0; /* Light gray background */
-    color: #4a5568; /* Dark gray text */
+    background: #e2e8f0;
+    color: #4a5568;
     padding: 0.5rem 1rem;
-    border-radius: 20px; /* Pill shape */
+    border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 500;
 }
 
-/* Container for individual task items */
 .tasks-list {
     display: flex;
-    flex-direction: column; /* Stack tasks vertically */
-    gap: 0.75rem; /* Space between tasks */
+    flex-direction: column;
+    gap: 0.75rem;
 }
 
-/* Individual task item styling */
 .task-item {
-    background: #f8fafc; /* Very light gray background */
-    border: 1px solid #e2e8f0; /* Light border */
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
     border-radius: 12px;
     padding: 1rem 1.5rem;
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Content left, actions right */
-    transition: all 0.3s ease; /* Smooth animations */
+    justify-content: space-between;
+    transition: all 0.3s ease;
     cursor: pointer;
 }
 
-/* Hover effect for task items with slide animation */
 .task-item:hover {
-    transform: translateX(4px); /* Slide right slightly */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
-    border-color: #cbd5e0; /* Darker border on hover */
+    transform: translateX(4px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling for completed tasks */
+/* Due date specific styling */
+.task-item.due-today {
+    border-left: 4px solid #ed8936;
+    background: linear-gradient(135deg, #feebc8 0%, #f8fafc 100%);
+    box-shadow: 0 2px 8px rgba(237, 137, 54, 0.2);
+}
+
+.task-item.overdue {
+    border-left: 4px solid #e53e3e;
+    background: linear-gradient(135deg, #fed7d7 0%, #f8fafc 100%);
+    box-shadow: 0 2px 8px rgba(229, 62, 62, 0.3);
+}
+
 .task-item.completed {
-    background: #f0fff4; /* Light green background */
-    border-color: #9ae6b4; /* Green border */
-    opacity: 0.8; /* Slightly faded appearance */
+    opacity: 0.7;
+    background: #f0fff4;
+    border-color: #9ae6b4;
 }
 
-/* Container for task checkbox and text */
 .task-content {
     display: flex;
-    align-items: center;
-    gap: 1rem; /* Space between checkbox and text */
-    flex: 1; /* Take up available space */
+    align-items: flex-start;
+    gap: 1rem;
+    flex: 1;
 }
 
-/* Custom checkbox styling for tasks */
+.task-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
 .task-checkbox {
     width: 20px;
     height: 20px;
-    border: 2px solid #cbd5e0; /* Gray border */
-    border-radius: 6px; /* Rounded corners */
+    border: 2px solid #cbd5e0;
+    border-radius: 6px;
     cursor: pointer;
-    position: relative; /* For checkmark positioning */
-    transition: all 0.3s ease; /* Smooth state changes */
+    position: relative;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    margin-top: 2px;
 }
 
-/* Checked state for task checkbox */
 .task-checkbox.checked {
-    background: #48bb78; /* Green background */
-    border-color: #48bb78; /* Green border */
+    background: #48bb78;
+    border-color: #48bb78;
 }
 
-/* Checkmark symbol for completed tasks */
 .task-checkbox.checked::after {
-    content: '✓'; /* Checkmark character */
+    content: '✓';
     color: white;
     font-size: 14px;
     font-weight: bold;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Center the checkmark */
+    transform: translate(-50%, -50%);
 }
 
-/* Task text content styling */
 .task-text {
     font-size: 1rem;
-    color: #2d3748; /* Dark gray text */
-    transition: all 0.3s ease; /* Smooth animations */
+    color: #2d3748;
+    font-weight: 500;
+    line-height: 1.4;
 }
 
-/* Strike-through effect for completed task text */
 .task-item.completed .task-text {
-    text-decoration: line-through; /* Cross out completed tasks */
-    color: #718096; /* Muted gray color */
+    text-decoration: line-through;
+    color: #718096;
 }
 
-/* Container for task action buttons */
+.task-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.85rem;
+}
+
+/* Due Date Badge */
+.due-date-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.due-date-badge:not(.due-today):not(.overdue) {
+    background: #e2e8f0;
+    color: #4a5568;
+}
+
+.due-date-badge.due-today {
+    background: #feebc8;
+    color: #d69e2e;
+}
+
+.due-date-badge.overdue {
+    background: #fed7d7;
+    color: #c53030;
+}
+
+.task-date {
+    color: #a0aec0;
+    font-size: 0.8rem;
+}
+
 .task-actions {
     display: flex;
-    gap: 0.5rem; /* Space between action buttons */
+    gap: 0.5rem;
 }
 
-/* Base styling for task action buttons */
 .task-btn {
-    background: none; /* Transparent background */
+    background: none;
     border: none;
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 8px;
-    transition: all 0.3s ease; /* Smooth hover effects */
+    transition: all 0.3s ease;
     font-size: 1.1rem;
 }
 
-/* Edit button styling */
 .edit-btn {
-    color: #3182ce; /* Blue color for edit action */
+    color: #3182ce;
 }
 
-/* Hover effect for edit button */
 .edit-btn:hover {
-    background: #ebf8ff; /* Light blue background on hover */
+    background: #ebf8ff;
 }
 
-/* Delete button styling */
 .delete-btn {
-    color: #e53e3e; /* Red color for delete action */
+    color: #e53e3e;
 }
 
-/* Hover effect for delete button */
 .delete-btn:hover {
-    background: #fed7d7; /* Light red background on hover */
+    background: #fed7d7;
 }
 
-/* ================================
-   EMPTY STATE WHEN NO TASKS
-   ================================ */
-/* Empty state display when no tasks exist */
+/* Empty State */
 .empty-state {
     text-align: center;
     padding: 3rem 2rem;
-    color: #718096; /* Muted gray text */
+    color: #718096;
 }
 
-/* Large icon for empty state */
 .empty-icon {
-    font-size: 3rem; /* Large size for visual impact */
+    font-size: 3rem;
     margin-bottom: 1rem;
 }
 
-/* Empty state heading */
 .empty-state h3 {
     font-size: 1.25rem;
     margin-bottom: 0.5rem;
-    color: #4a5568; /* Slightly darker than body text */
+    color: #4a5568;
 }
 
-/* ================================
-   STATISTICS SECTION
-   ================================ */
-/* Statistics section with glassmorphism effect */
+/* Stats Section */
 .stats-section {
-    background: rgba(255, 255, 255, 0.95); /* Semi-transparent background */
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 16px;
     padding: 1.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Elevated appearance */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive grid for statistics cards */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive columns */
-    gap: 1rem; /* Space between stat cards */
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
 }
 
-/* Individual statistic card styling */
 .stat-card {
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); /* Subtle gradient */
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     padding: 1.5rem;
     border-radius: 12px;
     text-align: center;
-    border: 1px solid #e2e8f0; /* Light border */
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
 }
 
-/* Large number display in stat cards */
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.overdue-stats {
+    background: linear-gradient(135deg, #fed7d7 0%, #feebc8 100%);
+    border-color: #e53e3e;
+}
+
 .stat-number {
     display: block;
-    font-size: 2rem; /* Large, prominent number */
-    font-weight: 700; /* Bold weight */
-    color: #2d3748; /* Dark gray */
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2d3748;
     margin-bottom: 0.5rem;
 }
 
-/* Label text under stat numbers */
 .stat-label {
-    font-size: 0.9rem; /* Smaller than number */
-    color: #718096; /* Muted gray */
+    font-size: 0.9rem;
+    color: #718096;
     font-weight: 500;
 }
 
-/* ================================
-   FOOTER SECTION
-   ================================ */
-/* Footer section styling */
+/* Due Date Breakdown */
+.due-date-breakdown {
+    border-top: 2px solid #f1f5f9;
+    padding-top: 2rem;
+}
+
+.due-date-breakdown h3 {
+    margin-bottom: 1rem;
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.due-date-stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.due-date-stat-item {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.due-date-stat-item:hover {
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.due-date-stat-item.due-today { border-left-color: #ed8936; }
+.due-date-stat-item.due-tomorrow { border-left-color: #3182ce; }
+.due-date-stat-item.due-week { border-left-color: #805ad5; }
+.due-date-stat-item.overdue { border-left-color: #e53e3e; }
+.due-date-stat-item.no-date { border-left-color: #718096; }
+
+.stat-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.stat-icon {
+    font-size: 1.2rem;
+}
+
+.stat-name {
+    font-weight: 500;
+    color: #2d3748;
+}
+
+.stat-count {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-weight: 600;
+    min-width: 2rem;
+    text-align: center;
+}
+
+.no-stats {
+    text-align: center;
+    color: #a0aec0;
+    font-style: italic;
+    padding: 2rem;
+}
+
+/* Footer */
 .footer {
     text-align: center;
     margin-top: 2rem;
     padding: 1rem;
-    color: rgba(255, 255, 255, 0.8); /* Semi-transparent white text */
+    color: rgba(255, 255, 255, 0.8);
     font-size: 0.9rem;
 }
 
-/* ================================
-   RESPONSIVE DESIGN BREAKPOINTS
-   ================================ */
-/* Tablet and mobile responsive styles */
+/* Responsive Design */
 @media (max-width: 768px) {
     .container {
-        padding: 1rem 0.5rem; /* Reduced padding on smaller screens */
+        padding: 1rem 0.5rem;
     }
 
     .app-title {
-        font-size: 2rem; /* Smaller title on mobile */
+        font-size: 2rem;
     }
 
     .input-container {
-        flex-direction: column; /* Stack input and button vertically */
-        align-items: stretch; /* Full width elements */
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .date-input-container {
+        justify-content: space-between;
+        min-width: auto;
     }
 
     .add-btn {
-        justify-content: center; /* Center button text */
+        justify-content: center;
     }
 
     .task-item {
-        padding: 1rem; /* Reduced padding for mobile */
+        padding: 1rem;
     }
 
     .tasks-header {
-        flex-direction: column; /* Stack header elements */
+        flex-direction: column;
         gap: 1rem;
         align-items: flex-start;
     }
+
+    .header-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .task-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .date-filters {
+        justify-content: center;
+    }
+
+    .filter-btn {
+        flex: 1;
+        min-width: auto;
+        justify-content: center;
+    }
 }
 
-/* Mobile phone responsive styles */
 @media (max-width: 480px) {
     .stats-grid {
-        grid-template-columns: 1fr; /* Single column on very small screens */
+        grid-template-columns: 1fr 1fr;
     }
 
     .app-title {
-        font-size: 1.75rem; /* Even smaller title */
+        font-size: 1.75rem;
     }
 
     .header-content {
-        padding: 1.5rem; /* Reduced header padding */
+        padding: 1.5rem;
+    }
+
+    .input-container {
+        gap: 0.75rem;
+    }
+
+    .date-input-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .date-label {
+        text-align: center;
+    }
+
+    .due-date-stat-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .stat-info {
+        width: 100%;
     }
 }
 
-/* ================================
-   ANIMATIONS AND TRANSITIONS
-   ================================ */
-/* Slide-in animation for new tasks */
+/* Animation Classes */
 @keyframes slideIn {
     from {
-        opacity: 0; /* Start invisible */
-        transform: translateY(20px); /* Start below final position */
+        opacity: 0;
+        transform: translateY(20px);
     }
     to {
-        opacity: 1; /* End fully visible */
-        transform: translateY(0); /* End at normal position */
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
-/* Apply slide-in animation to task items */
 .task-item {
-    animation: slideIn 0.3s ease; /* Smooth entry animation */
+    animation: slideIn 0.3s ease;
+}
+
+/* Overdue pulse animation */
+@keyframes overduePulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(229, 62, 62, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(229, 62, 62, 0);
+    }
+}
+
+.task-item.overdue:not(.completed) {
+    animation: overduePulse 3s infinite;
+}
+
+/* Due today glow animation */
+@keyframes dueTodayGlow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(237, 137, 54, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 0 6px rgba(237, 137, 54, 0);
+    }
+}
+
+.task-item.due-today:not(.completed):hover {
+    animation: dueTodayGlow 2s infinite;
 }

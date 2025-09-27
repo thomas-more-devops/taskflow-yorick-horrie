@@ -1,194 +1,473 @@
-// Main TaskFlow application class that manages task creation, editing, and persistence
 class TaskFlow {
-    // Initialize the TaskFlow application with all necessary setup
     constructor() {
-        this.tasks = this.loadTasks(); // Load existing tasks from localStorage
-        this.taskIdCounter = this.getNextTaskId(); // Get the next available task ID
-        this.initializeApp(); // Set up the application
-        this.bindEvents(); // Attach event listeners
-        this.renderTasks(); // Display existing tasks
-        this.updateStats(); // Update task statistics
+        this.tasks = this.loadTasks();
+        this.taskIdCounter = this.getNextTaskId();
+        this.currentFilter = 'all';
+        this.currentSort = 'due-date';
+        this.initializeApp();
+        this.bindEvents();
+        this.renderTasks();
+        this.updateStats();
     }
 
-    // Initialize the application and show welcome message if needed
     initializeApp() {
-        console.log('TaskFlow initialized successfully!');
+        console.log('TaskFlow initialized with Due Date System!');
         this.showWelcomeMessage();
+        this.setDefaultDate();
     }
 
-    // Display welcome message for new users with no tasks
     showWelcomeMessage() {
         if (this.tasks.length === 0) {
-            console.log('Welcome to TaskFlow! Add your first task to get started.');
+            console.log('Welcome to TaskFlow! Track your tasks with due dates.');
         }
     }
 
-    // Attach event listeners to UI elements
+    setDefaultDate() {
+        // Set default due date to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('dueDateInput').value = tomorrow.toISOString().split('T')[0];
+    }
+
     bindEvents() {
         const addTaskBtn = document.getElementById('addTaskBtn');
         const taskInput = document.getElementById('taskInput');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const sortSelect = document.getElementById('sortSelect');
 
-        // Add task when button is clicked
         addTaskBtn.addEventListener('click', () => this.addTask());
 
-        // Add task when Enter key is pressed in input field
         taskInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 this.addTask();
             }
         });
 
-        // Focus on input when page loads for better UX
+        // Date filter buttons
+        filterButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const filter = e.currentTarget.dataset.filter;
+                this.setFilter(filter);
+            });
+        });
+
+        // Sort selection
+        sortSelect.addEventListener('change', (e) => {
+            this.currentSort = e.target.value;
+            this.renderTasks();
+        });
+
+        // Focus on input when page loads
         taskInput.focus();
     }
 
-    // Create a new task and add it to the task list
+    setFilter(filter) {
+        this.currentFilter = filter;
+
+        // Update button states
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+
+        this.renderTasks();
+    }
+
     addTask() {
         const taskInput = document.getElementById('taskInput');
+        const prioritySelect = document.getElementById('prioritySelect');
+        const categorySelect = document.getElementById('categorySelect');
+        const dueDateInput = document.getElementById('dueDateInput');
         const taskText = taskInput.value.trim();
+        const priority = prioritySelect.value;
+        const category = categorySelect.value;
+        const dueDate = dueDateInput.value;
 
-        // Validate input - don't allow empty tasks
         if (taskText === '') {
             this.showNotification('Please enter a task description', 'warning');
             taskInput.focus();
             return;
         }
 
-        // Create new task object with metadata
         const newTask = {
-            id: this.taskIdCounter++, // Unique identifier
-            text: taskText, // Task description
-            completed: false, // Completion status
-            createdAt: new Date().toISOString(), // Creation timestamp
-            completedAt: null // Completion timestamp (null until completed)
+            id: this.taskIdCounter++,
+            text: taskText,
+            priority: priority,
+            category: category,
+            dueDate: dueDate || null,
+            completed: false,
+            createdAt: new Date().toISOString(),
+            completedAt: null
         };
 
-        // Add task to array and update UI/storage
         this.tasks.push(newTask);
-        this.saveTasks(); // Persist to localStorage
-        this.renderTasks(); // Update task display
-        this.updateStats(); // Update statistics
+        this.saveTasks();
+        this.renderTasks();
+        this.updateStats();
 
-        // Clear input and refocus for next task
         taskInput.value = '';
+        prioritySelect.value = 'medium';
+        categorySelect.value = 'personal';
+        this.setDefaultDate();
         taskInput.focus();
 
-        this.showNotification('Task added successfully!', 'success');
+        const dueDateMsg = dueDate ? `due ${this.formatDate(dueDate)}` : 'with no due date';
+        this.showNotification(`Task added ${dueDateMsg}!`, 'success');
     }
 
-    // Delete a task after user confirmation
     deleteTask(taskId) {
         if (confirm('Are you sure you want to delete this task?')) {
-            // Remove task from array by filtering out the target ID
             this.tasks = this.tasks.filter(task => task.id !== taskId);
-            this.saveTasks(); // Update localStorage
-            this.renderTasks(); // Refresh task display
-            this.updateStats(); // Update statistics
+            this.saveTasks();
+            this.renderTasks();
+            this.updateStats();
             this.showNotification('Task deleted successfully!', 'success');
         }
     }
 
-    // Toggle task completion status between completed and pending
     toggleTask(taskId) {
         const task = this.tasks.find(task => task.id === taskId);
         if (task) {
-            // Toggle completion status
             task.completed = !task.completed;
-            // Set completion timestamp or clear it
             task.completedAt = task.completed ? new Date().toISOString() : null;
+            this.saveTasks();
+            this.renderTasks();
+            this.updateStats();
 
-            this.saveTasks(); // Persist changes
-            this.renderTasks(); // Update UI
-            this.updateStats(); // Update statistics
-
-            // Show appropriate feedback message
             const message = task.completed ? 'Task completed! 🎉' : 'Task marked as pending';
             this.showNotification(message, 'success');
         }
     }
 
-    // Edit an existing task's text content
     editTask(taskId) {
         const task = this.tasks.find(task => task.id === taskId);
         if (task) {
-            // Prompt user for new task text with current text as default
             const newText = prompt('Edit task:', task.text);
-
-            // Only update if user provided valid text
             if (newText !== null && newText.trim() !== '') {
+                // Also allow editing due date
+                const currentDate = task.dueDate || '';
+                const newDueDate = prompt('Due date (YYYY-MM-DD) or leave empty:', currentDate);
+
+                // Validate date format or allow empty
+                if (newDueDate === '' || this.isValidDate(newDueDate)) {
+                    task.dueDate = newDueDate || null;
+                }
+
                 task.text = newText.trim();
-                this.saveTasks(); // Persist changes
-                this.renderTasks(); // Update display
+                this.saveTasks();
+                this.renderTasks();
+                this.updateStats();
                 this.showNotification('Task updated successfully!', 'success');
             }
         }
     }
 
-    // Render all tasks in the UI with proper sorting and styling
+    isValidDate(dateString) {
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        return regex.test(dateString) && !isNaN(Date.parse(dateString));
+    }
+
+    isOverdue(task) {
+        if (!task.dueDate || task.completed) return false;
+        const today = new Date();
+        const dueDate = new Date(task.dueDate);
+        today.setHours(0, 0, 0, 0);
+        dueDate.setHours(0, 0, 0, 0);
+        return dueDate < today;
+    }
+
+    isDueToday(task) {
+        if (!task.dueDate) return false;
+        const today = new Date();
+        const dueDate = new Date(task.dueDate);
+        today.setHours(0, 0, 0, 0);
+        dueDate.setHours(0, 0, 0, 0);
+        return dueDate.getTime() === today.getTime();
+    }
+
+    isDueTomorrow(task) {
+        if (!task.dueDate) return false;
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        const dueDate = new Date(task.dueDate);
+        dueDate.setHours(0, 0, 0, 0);
+        return dueDate.getTime() === tomorrow.getTime();
+    }
+
+    isDueThisWeek(task) {
+        if (!task.dueDate) return false;
+        const today = new Date();
+        const weekEnd = new Date();
+        weekEnd.setDate(today.getDate() + 7);
+        const dueDate = new Date(task.dueDate);
+
+        today.setHours(0, 0, 0, 0);
+        weekEnd.setHours(23, 59, 59, 999);
+        dueDate.setHours(0, 0, 0, 0);
+
+        return dueDate >= today && dueDate <= weekEnd;
+    }
+
+    getFilteredTasks() {
+        switch (this.currentFilter) {
+            case 'all':
+                return this.tasks;
+            case 'today':
+                return this.tasks.filter(task => this.isDueToday(task));
+            case 'tomorrow':
+                return this.tasks.filter(task => this.isDueTomorrow(task));
+            case 'this-week':
+                return this.tasks.filter(task => this.isDueThisWeek(task));
+            case 'overdue':
+                return this.tasks.filter(task => this.isOverdue(task));
+            case 'no-date':
+                return this.tasks.filter(task => !task.dueDate);
+            default:
+                return this.tasks;
+        }
+    }
+
+    sortTasks(tasks) {
+        const tasksCopy = [...tasks];
+
+        switch (this.currentSort) {
+            case 'due-date':
+                return tasksCopy.sort((a, b) => {
+                    // First sort by completion status
+                    if (a.completed !== b.completed) {
+                        return a.completed - b.completed;
+                    }
+
+                    // Handle tasks without due dates (put at end)
+                    if (!a.dueDate && !b.dueDate) return 0;
+                    if (!a.dueDate) return 1;
+                    if (!b.dueDate) return -1;
+
+                    // Sort by due date
+                    return new Date(a.dueDate) - new Date(b.dueDate);
+                });
+
+            case 'created':
+                return tasksCopy.sort((a, b) => {
+                    // First sort by completion status
+                    if (a.completed !== b.completed) {
+                        return a.completed - b.completed;
+                    }
+                    // Then by creation date (newest first)
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                });
+
+            case 'alphabetical':
+                return tasksCopy.sort((a, b) => {
+                    // First sort by completion status
+                    if (a.completed !== b.completed) {
+                        return a.completed - b.completed;
+                    }
+                    // Then alphabetically
+                    return a.text.toLowerCase().localeCompare(b.text.toLowerCase());
+                });
+
+            default:
+                return tasksCopy;
+        }
+    }
+
     renderTasks() {
         const tasksList = document.getElementById('tasksList');
         const emptyState = document.getElementById('emptyState');
+        const filteredTasks = this.getFilteredTasks();
 
-        // Show empty state if no tasks exist
-        if (this.tasks.length === 0) {
+        if (filteredTasks.length === 0) {
             tasksList.style.display = 'none';
             emptyState.style.display = 'block';
+
+            // Update empty state message based on filter
+            this.updateEmptyStateMessage();
             return;
         }
 
-        // Show task list and hide empty state
         tasksList.style.display = 'flex';
         emptyState.style.display = 'none';
 
-        // Sort tasks: incomplete first, then by creation date (newest first)
-        const sortedTasks = [...this.tasks].sort((a, b) => {
-            if (a.completed !== b.completed) {
-                return a.completed - b.completed; // Incomplete tasks first
-            }
-            return new Date(b.createdAt) - new Date(a.createdAt); // Newest first within same completion status
-        });
+        const sortedTasks = this.sortTasks(filteredTasks);
 
-        // Generate HTML for each task with interactive elements
-        tasksList.innerHTML = sortedTasks.map(task => `
-            <div class="task-item ${task.completed ? 'completed' : ''}" data-task-id="${task.id}">
-                <div class="task-content">
-                    <div class="task-checkbox ${task.completed ? 'checked' : ''}"
-                         onclick="taskFlow.toggleTask(${task.id})">
+        tasksList.innerHTML = sortedTasks.map(task => {
+            const isOverdue = this.isOverdue(task);
+            const isDueToday = this.isDueToday(task);
+            const dueDateClass = isOverdue ? 'overdue' : isDueToday ? 'due-today' : '';
+
+            return `
+                <div class="task-item ${task.completed ? 'completed' : ''} ${dueDateClass}" data-task-id="${task.id}">
+                    <div class="task-content">
+                        <div class="task-checkbox ${task.completed ? 'checked' : ''}"
+                             onclick="taskFlow.toggleTask(${task.id})">
+                        </div>
+                        <div class="task-info">
+                            <span class="task-text">${this.escapeHtml(task.text)}</span>
+                            <div class="task-meta">
+                                <span class="due-date-badge ${dueDateClass}">
+                                    ${this.getDueDateDisplay(task)}
+                                </span>
+                                <span class="task-date">Created: ${this.formatDate(task.createdAt)}</span>
+                            </div>
+                        </div>
                     </div>
-                    <span class="task-text">${this.escapeHtml(task.text)}</span>
+                    <div class="task-actions">
+                        <button class="task-btn edit-btn" onclick="taskFlow.editTask(${task.id})" title="Edit task">
+                            ✏️
+                        </button>
+                        <button class="task-btn delete-btn" onclick="taskFlow.deleteTask(${task.id})" title="Delete task">
+                            🗑️
+                        </button>
+                    </div>
                 </div>
-                <div class="task-actions">
-                    <button class="task-btn edit-btn" onclick="taskFlow.editTask(${task.id})" title="Edit task">
-                        ✏️
-                    </button>
-                    <button class="task-btn delete-btn" onclick="taskFlow.deleteTask(${task.id})" title="Delete task">
-                        🗑️
-                    </button>
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
-    // Update statistics display with current task counts
+    updateEmptyStateMessage() {
+        const emptyState = document.getElementById('emptyState');
+        const filterMessages = {
+            all: {
+                icon: '✨',
+                title: 'No tasks yet',
+                message: 'Add your first task above to get started!'
+            },
+            today: {
+                icon: '🔥',
+                title: 'No tasks due today',
+                message: 'Great job! No urgent tasks for today.'
+            },
+            tomorrow: {
+                icon: '⏰',
+                title: 'No tasks due tomorrow',
+                message: 'Your tomorrow is looking free!'
+            },
+            'this-week': {
+                icon: '📆',
+                title: 'No tasks due this week',
+                message: 'You\'re all caught up for this week!'
+            },
+            overdue: {
+                icon: '🎉',
+                title: 'No overdue tasks',
+                message: 'Excellent! You\'re staying on top of your deadlines.'
+            },
+            'no-date': {
+                icon: '❓',
+                title: 'No tasks without due dates',
+                message: 'All your tasks have due dates assigned!'
+            }
+        };
+
+        const config = filterMessages[this.currentFilter];
+        emptyState.innerHTML = `
+            <div class="empty-icon">${config.icon}</div>
+            <h3>${config.title}</h3>
+            <p>${config.message}</p>
+        `;
+    }
+
+    getDueDateDisplay(task) {
+        if (!task.dueDate) {
+            return '📋 No due date';
+        }
+
+        const today = new Date();
+        const dueDate = new Date(task.dueDate);
+        const diffTime = dueDate - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (this.isOverdue(task)) {
+            const overdueDays = Math.abs(diffDays);
+            return `⚠️ ${overdueDays} day${overdueDays === 1 ? '' : 's'} overdue`;
+        } else if (this.isDueToday(task)) {
+            return '🔥 Due today';
+        } else if (this.isDueTomorrow(task)) {
+            return '⏰ Due tomorrow';
+        } else if (diffDays <= 7) {
+            return `📅 Due in ${diffDays} day${diffDays === 1 ? '' : 's'}`;
+        } else {
+            return `📅 Due ${this.formatDate(task.dueDate)}`;
+        }
+    }
+
+    formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
+        });
+    }
+
     updateStats() {
         const totalTasks = this.tasks.length;
         const completedTasks = this.tasks.filter(task => task.completed).length;
         const pendingTasks = totalTasks - completedTasks;
+        const overdueTasks = this.tasks.filter(task => this.isOverdue(task)).length;
 
-        // Update statistics counters in the UI
         document.getElementById('totalTasks').textContent = totalTasks;
         document.getElementById('completedTasks').textContent = completedTasks;
         document.getElementById('pendingTasks').textContent = pendingTasks;
+        document.getElementById('overdueTasks').textContent = overdueTasks;
 
-        // Update task count in header with proper singular/plural handling
+        // Update task count in header (filtered)
+        const filteredTasks = this.getFilteredTasks();
         const taskCount = document.getElementById('taskCount');
-        taskCount.textContent = `${totalTasks} ${totalTasks === 1 ? 'task' : 'tasks'}`;
+
+        if (this.currentFilter === 'all') {
+            taskCount.textContent = `${totalTasks} ${totalTasks === 1 ? 'task' : 'tasks'}`;
+        } else {
+            const filterNames = {
+                today: 'today',
+                tomorrow: 'tomorrow',
+                'this-week': 'this week',
+                overdue: 'overdue',
+                'no-date': 'without due dates'
+            };
+            const filterName = filterNames[this.currentFilter] || this.currentFilter;
+            taskCount.textContent = `${filteredTasks.length} ${filteredTasks.length === 1 ? 'task' : 'tasks'} ${filterName}`;
+        }
+
+        this.updateDueDateBreakdown();
     }
 
-    // Save tasks and counter to localStorage with error handling
+    updateDueDateBreakdown() {
+        const dueDateStats = document.getElementById('dueDateStats');
+
+        const today = this.tasks.filter(t => this.isDueToday(t) && !t.completed).length;
+        const tomorrow = this.tasks.filter(t => this.isDueTomorrow(t) && !t.completed).length;
+        const thisWeek = this.tasks.filter(t => this.isDueThisWeek(t) && !t.completed && !this.isDueToday(t) && !this.isDueTomorrow(t)).length;
+        const overdue = this.tasks.filter(t => this.isOverdue(t)).length;
+        const noDate = this.tasks.filter(t => !t.dueDate && !t.completed).length;
+
+        const stats = [
+            { label: 'Due Today', count: today, icon: '🔥', class: 'due-today' },
+            { label: 'Due Tomorrow', count: tomorrow, icon: '⏰', class: 'due-tomorrow' },
+            { label: 'Due This Week', count: thisWeek, icon: '📆', class: 'due-week' },
+            { label: 'Overdue', count: overdue, icon: '⚠️', class: 'overdue' },
+            { label: 'No Due Date', count: noDate, icon: '📋', class: 'no-date' }
+        ];
+
+        const statsHTML = stats
+            .filter(stat => stat.count > 0)
+            .map(stat => `
+                <div class="due-date-stat-item ${stat.class}">
+                    <div class="stat-info">
+                        <span class="stat-icon">${stat.icon}</span>
+                        <span class="stat-name">${stat.label}</span>
+                    </div>
+                    <div class="stat-count">${stat.count}</div>
+                </div>
+            `).join('');
+
+        dueDateStats.innerHTML = statsHTML || '<p class="no-stats">All tasks are completed or have optimal due dates!</p>';
+    }
+
     saveTasks() {
         try {
-            // Persist tasks array and ID counter to browser storage
             localStorage.setItem('taskflow_tasks', JSON.stringify(this.tasks));
             localStorage.setItem('taskflow_counter', this.taskIdCounter.toString());
         } catch (error) {
@@ -197,46 +476,47 @@ class TaskFlow {
         }
     }
 
-    // Load tasks from localStorage with error handling
     loadTasks() {
         try {
             const saved = localStorage.getItem('taskflow_tasks');
-            // Parse saved tasks or return empty array if none exist
-            return saved ? JSON.parse(saved) : [];
+            const tasks = saved ? JSON.parse(saved) : [];
+            // Ensure all tasks have required properties (for backward compatibility)
+            return tasks.map(task => ({
+                ...task,
+                priority: task.priority || 'medium',
+                category: task.category || 'personal',
+                dueDate: task.dueDate || null
+            }));
         } catch (error) {
             console.error('Failed to load tasks:', error);
-            return []; // Return empty array on error to prevent app crash
+            return [];
         }
     }
 
-    // Get the next available task ID from localStorage
     getNextTaskId() {
         try {
             const saved = localStorage.getItem('taskflow_counter');
-            // Parse saved counter or start from 1 if none exists
             return saved ? parseInt(saved) : 1;
         } catch (error) {
             console.error('Failed to load task counter:', error);
-            return 1; // Default to 1 on error
+            return 1;
         }
     }
 
-    // Escape HTML characters to prevent XSS attacks
     escapeHtml(unsafe) {
         return unsafe
-            .replace(/&/g, "&amp;")   // Must be first to avoid double-escaping
-            .replace(/</g, "&lt;")    // Less than
-            .replace(/>/g, "&gt;")    // Greater than
-            .replace(/"/g, "&quot;")  // Double quotes
-            .replace(/'/g, "&#039;"); // Single quotes
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
     }
 
-    // Display toast notifications to provide user feedback
     showNotification(message, type = 'info') {
-        // Log to console for debugging
+        // Simple notification system
         console.log(`[${type.toUpperCase()}] ${message}`);
 
-        // Create notification element with inline styles
+        // Create notification element
         const notification = document.createElement('div');
         notification.style.cssText = `
             position: fixed;
@@ -254,27 +534,26 @@ class TaskFlow {
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         `;
 
-        // Color scheme for different notification types
+        // Set color based on type
         const colors = {
-            success: '#48bb78',  // Green for success
-            error: '#e53e3e',    // Red for errors
-            warning: '#ed8936',  // Orange for warnings
-            info: '#3182ce'      // Blue for info
+            success: '#48bb78',
+            error: '#e53e3e',
+            warning: '#ed8936',
+            info: '#3182ce'
         };
 
-        // Apply color and content
         notification.style.background = colors[type] || colors.info;
         notification.textContent = message;
 
         document.body.appendChild(notification);
 
-        // Animate in with delay for smooth transition
+        // Animate in
         setTimeout(() => {
             notification.style.opacity = '1';
             notification.style.transform = 'translateY(0)';
         }, 100);
 
-        // Auto-remove after 3 seconds with fade out animation
+        // Remove after 3 seconds
         setTimeout(() => {
             notification.style.opacity = '0';
             notification.style.transform = 'translateY(-20px)';
@@ -284,48 +563,46 @@ class TaskFlow {
         }, 3000);
     }
 
-    // Export all tasks to a JSON file for backup purposes
+    // Utility methods for potential future features
     exportTasks() {
-        // Convert tasks to formatted JSON string
         const dataStr = JSON.stringify(this.tasks, null, 2);
         const dataBlob = new Blob([dataStr], {type: 'application/json'});
         const url = URL.createObjectURL(dataBlob);
 
-        // Create temporary download link and trigger download
         const link = document.createElement('a');
         link.href = url;
         link.download = 'taskflow_backup.json';
         link.click();
 
-        // Clean up object URL to prevent memory leaks
         URL.revokeObjectURL(url);
         this.showNotification('Tasks exported successfully!', 'success');
     }
 
-    // Clear all tasks after user confirmation (destructive action)
     clearAllTasks() {
         if (confirm('Are you sure you want to delete ALL tasks? This cannot be undone.')) {
-            this.tasks = []; // Empty the tasks array
-            this.saveTasks(); // Persist the empty state
-            this.renderTasks(); // Update UI to show empty state
-            this.updateStats(); // Reset statistics
+            this.tasks = [];
+            this.saveTasks();
+            this.renderTasks();
+            this.updateStats();
             this.showNotification('All tasks cleared!', 'success');
         }
     }
 
-    // Calculate detailed statistics about tasks for analytics
     getTaskStats() {
         const now = new Date();
         const stats = {
             total: this.tasks.length,
             completed: this.tasks.filter(t => t.completed).length,
             pending: this.tasks.filter(t => !t.completed).length,
-            // Tasks created today
+            dueToday: this.tasks.filter(t => this.isDueToday(t)).length,
+            dueTomorrow: this.tasks.filter(t => this.isDueTomorrow(t)).length,
+            dueThisWeek: this.tasks.filter(t => this.isDueThisWeek(t)).length,
+            overdue: this.tasks.filter(t => this.isOverdue(t)).length,
+            noDueDate: this.tasks.filter(t => !t.dueDate).length,
             createdToday: this.tasks.filter(t => {
                 const taskDate = new Date(t.createdAt);
                 return taskDate.toDateString() === now.toDateString();
             }).length,
-            // Tasks completed today
             completedToday: this.tasks.filter(t => {
                 if (!t.completedAt) return false;
                 const completedDate = new Date(t.completedAt);
@@ -336,13 +613,12 @@ class TaskFlow {
     }
 }
 
-// Initialize the TaskFlow application when DOM is fully loaded
+// Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Create global instance for access from inline event handlers
     window.taskFlow = new TaskFlow();
 });
 
-// Export TaskFlow class for Node.js testing environments
+// Export for potential testing
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = TaskFlow;
 }
