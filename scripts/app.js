@@ -1,227 +1,161 @@
+// Main TaskFlow application class that manages task creation, editing, and persistence
 class TaskFlow {
+    // Initialize the TaskFlow application with all necessary setup
     constructor() {
-        this.tasks = this.loadTasks();
-        this.taskIdCounter = this.getNextTaskId();
-        this.currentSort = 'priority';
-        this.initializeApp();
-        this.bindEvents();
-        this.renderTasks();
-        this.updateStats();
+        this.tasks = this.loadTasks(); // Load existing tasks from localStorage
+        this.taskIdCounter = this.getNextTaskId(); // Get the next available task ID
+        this.initializeApp(); // Set up the application
+        this.bindEvents(); // Attach event listeners
+        this.renderTasks(); // Display existing tasks
+        this.updateStats(); // Update task statistics
     }
 
+    // Initialize the application and show welcome message if needed
     initializeApp() {
-        console.log('TaskFlow initialized with Priority System!');
+        console.log('TaskFlow initialized successfully!');
         this.showWelcomeMessage();
-        this.setDefaultDate();
     }
 
-    setDefaultDate() {
-        // Set default due date to tomorrow
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        document.getElementById('dueDateInput').value = tomorrow.toISOString().split('T')[0];
-    }
-
+    // Display welcome message for new users with no tasks
     showWelcomeMessage() {
         if (this.tasks.length === 0) {
-            console.log('Welcome to TaskFlow! Add your first task with priority to get started.');
+            console.log('Welcome to TaskFlow! Add your first task to get started.');
         }
     }
 
+    // Attach event listeners to UI elements
     bindEvents() {
         const addTaskBtn = document.getElementById('addTaskBtn');
         const taskInput = document.getElementById('taskInput');
-        const sortSelect = document.getElementById('sortSelect');
 
+        // Add task when button is clicked
         addTaskBtn.addEventListener('click', () => this.addTask());
 
+        // Add task when Enter key is pressed in input field
         taskInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 this.addTask();
             }
         });
 
-        sortSelect.addEventListener('change', (e) => {
-            this.currentSort = e.target.value;
-            this.renderTasks();
-        });
-
-        // Focus on input when page loads
+        // Focus on input when page loads for better UX
         taskInput.focus();
     }
 
+    // Create a new task and add it to the task list
     addTask() {
         const taskInput = document.getElementById('taskInput');
-        const prioritySelect = document.getElementById('prioritySelect');
-        const categorySelect = document.getElementById('categorySelect');
-        const dueDateInput = document.getElementById('dueDateInput');
         const taskText = taskInput.value.trim();
-        const priority = prioritySelect.value;
-        const category = categorySelect.value;
-        const dueDate = dueDateInput.value;
 
+        // Validate input - don't allow empty tasks
         if (taskText === '') {
             this.showNotification('Please enter a task description', 'warning');
             taskInput.focus();
             return;
         }
 
+        // Create new task object with metadata
         const newTask = {
-            id: this.taskIdCounter++,
-            text: taskText,
-            priority: priority,
-            category: category,
-            dueDate: dueDate || null,
-            completed: false,
-            createdAt: new Date().toISOString(),
-            completedAt: null
+            id: this.taskIdCounter++, // Unique identifier
+            text: taskText, // Task description
+            completed: false, // Completion status
+            createdAt: new Date().toISOString(), // Creation timestamp
+            completedAt: null // Completion timestamp (null until completed)
         };
 
+        // Add task to array and update UI/storage
         this.tasks.push(newTask);
-        this.saveTasks();
-        this.renderTasks();
-        this.updateStats();
+        this.saveTasks(); // Persist to localStorage
+        this.renderTasks(); // Update task display
+        this.updateStats(); // Update statistics
 
+        // Clear input and refocus for next task
         taskInput.value = '';
-        prioritySelect.value = 'medium';
-        categorySelect.value = 'personal';
-        this.setDefaultDate();
         taskInput.focus();
 
-        const priorityLabel = this.getPriorityLabel(priority);
-        this.showNotification(`${priorityLabel} task added successfully!`, 'success');
+        this.showNotification('Task added successfully!', 'success');
     }
 
-    getPriorityLabel(priority) {
-        const labels = {
-            high: 'High Priority',
-            medium: 'Medium Priority',
-            low: 'Low Priority'
-        };
-        return labels[priority] || 'Priority';
-    }
-
-    getPriorityValue(priority) {
-        const values = {
-            high: 3,
-            medium: 2,
-            low: 1
-        };
-        return values[priority] || 2;
-    }
-
+    // Delete a task after user confirmation
     deleteTask(taskId) {
         if (confirm('Are you sure you want to delete this task?')) {
+            // Remove task from array by filtering out the target ID
             this.tasks = this.tasks.filter(task => task.id !== taskId);
-            this.saveTasks();
-            this.renderTasks();
-            this.updateStats();
+            this.saveTasks(); // Update localStorage
+            this.renderTasks(); // Refresh task display
+            this.updateStats(); // Update statistics
             this.showNotification('Task deleted successfully!', 'success');
         }
     }
 
+    // Toggle task completion status between completed and pending
     toggleTask(taskId) {
         const task = this.tasks.find(task => task.id === taskId);
         if (task) {
+            // Toggle completion status
             task.completed = !task.completed;
+            // Set completion timestamp or clear it
             task.completedAt = task.completed ? new Date().toISOString() : null;
-            this.saveTasks();
-            this.renderTasks();
-            this.updateStats();
 
+            this.saveTasks(); // Persist changes
+            this.renderTasks(); // Update UI
+            this.updateStats(); // Update statistics
+
+            // Show appropriate feedback message
             const message = task.completed ? 'Task completed! 🎉' : 'Task marked as pending';
             this.showNotification(message, 'success');
         }
     }
 
+    // Edit an existing task's text content
     editTask(taskId) {
         const task = this.tasks.find(task => task.id === taskId);
         if (task) {
+            // Prompt user for new task text with current text as default
             const newText = prompt('Edit task:', task.text);
+
+            // Only update if user provided valid text
             if (newText !== null && newText.trim() !== '') {
-                // Also allow editing priority
-                const newPriority = prompt('Priority (high/medium/low):', task.priority);
-                if (newPriority && ['high', 'medium', 'low'].includes(newPriority.toLowerCase())) {
-                    task.priority = newPriority.toLowerCase();
-                }
                 task.text = newText.trim();
-                this.saveTasks();
-                this.renderTasks();
-                this.updateStats();
+                this.saveTasks(); // Persist changes
+                this.renderTasks(); // Update display
                 this.showNotification('Task updated successfully!', 'success');
             }
         }
     }
 
-    sortTasks(tasks) {
-        const tasksCopy = [...tasks];
-
-        switch (this.currentSort) {
-            case 'priority':
-                return tasksCopy.sort((a, b) => {
-                    // First sort by completion status
-                    if (a.completed !== b.completed) {
-                        return a.completed - b.completed;
-                    }
-                    // Then by priority (high to low)
-                    return this.getPriorityValue(b.priority) - this.getPriorityValue(a.priority);
-                });
-
-            case 'created':
-                return tasksCopy.sort((a, b) => {
-                    // First sort by completion status
-                    if (a.completed !== b.completed) {
-                        return a.completed - b.completed;
-                    }
-                    // Then by creation date (newest first)
-                    return new Date(b.createdAt) - new Date(a.createdAt);
-                });
-
-            case 'alphabetical':
-                return tasksCopy.sort((a, b) => {
-                    // First sort by completion status
-                    if (a.completed !== b.completed) {
-                        return a.completed - b.completed;
-                    }
-                    // Then alphabetically
-                    return a.text.toLowerCase().localeCompare(b.text.toLowerCase());
-                });
-
-            default:
-                return tasksCopy;
-        }
-    }
-
+    // Render all tasks in the UI with proper sorting and styling
     renderTasks() {
         const tasksList = document.getElementById('tasksList');
         const emptyState = document.getElementById('emptyState');
 
+        // Show empty state if no tasks exist
         if (this.tasks.length === 0) {
             tasksList.style.display = 'none';
             emptyState.style.display = 'block';
             return;
         }
 
+        // Show task list and hide empty state
         tasksList.style.display = 'flex';
         emptyState.style.display = 'none';
 
-        const sortedTasks = this.sortTasks(this.tasks);
+        // Sort tasks: incomplete first, then by creation date (newest first)
+        const sortedTasks = [...this.tasks].sort((a, b) => {
+            if (a.completed !== b.completed) {
+                return a.completed - b.completed; // Incomplete tasks first
+            }
+            return new Date(b.createdAt) - new Date(a.createdAt); // Newest first within same completion status
+        });
 
+        // Generate HTML for each task with interactive elements
         tasksList.innerHTML = sortedTasks.map(task => `
-            <div class="task-item ${task.completed ? 'completed' : ''} priority-${task.priority}" data-task-id="${task.id}">
+            <div class="task-item ${task.completed ? 'completed' : ''}" data-task-id="${task.id}">
                 <div class="task-content">
                     <div class="task-checkbox ${task.completed ? 'checked' : ''}"
                          onclick="taskFlow.toggleTask(${task.id})">
                     </div>
-                    <div class="task-info">
-                        <span class="task-text">${this.escapeHtml(task.text)}</span>
-                        <div class="task-meta">
-                            <span class="priority-badge priority-${task.priority}">
-                                ${this.getPriorityIcon(task.priority)} ${this.getPriorityLabel(task.priority)}
-                            </span>
-                            <span class="task-date">${this.formatDate(task.createdAt)}</span>
-                        </div>
-                    </div>
+                    <span class="task-text">${this.escapeHtml(task.text)}</span>
                 </div>
                 <div class="task-actions">
                     <button class="task-btn edit-btn" onclick="taskFlow.editTask(${task.id})" title="Edit task">
@@ -235,41 +169,26 @@ class TaskFlow {
         `).join('');
     }
 
-    getPriorityIcon(priority) {
-        const icons = {
-            high: '🔥',
-            medium: '⚡',
-            low: '🌱'
-        };
-        return icons[priority] || '⚡';
-    }
-
-    formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric'
-        });
-    }
-
+    // Update statistics display with current task counts
     updateStats() {
         const totalTasks = this.tasks.length;
         const completedTasks = this.tasks.filter(task => task.completed).length;
         const pendingTasks = totalTasks - completedTasks;
-        const highPriorityTasks = this.tasks.filter(task => task.priority === 'high' && !task.completed).length;
 
+        // Update statistics counters in the UI
         document.getElementById('totalTasks').textContent = totalTasks;
         document.getElementById('completedTasks').textContent = completedTasks;
         document.getElementById('pendingTasks').textContent = pendingTasks;
-        document.getElementById('highPriorityTasks').textContent = highPriorityTasks;
 
-        // Update task count in header
+        // Update task count in header with proper singular/plural handling
         const taskCount = document.getElementById('taskCount');
         taskCount.textContent = `${totalTasks} ${totalTasks === 1 ? 'task' : 'tasks'}`;
     }
 
+    // Save tasks and counter to localStorage with error handling
     saveTasks() {
         try {
+            // Persist tasks array and ID counter to browser storage
             localStorage.setItem('taskflow_tasks', JSON.stringify(this.tasks));
             localStorage.setItem('taskflow_counter', this.taskIdCounter.toString());
         } catch (error) {
@@ -278,47 +197,46 @@ class TaskFlow {
         }
     }
 
+    // Load tasks from localStorage with error handling
     loadTasks() {
         try {
             const saved = localStorage.getItem('taskflow_tasks');
-            const tasks = saved ? JSON.parse(saved) : [];
-            // Ensure all tasks have required properties (for backward compatibility)
-            return tasks.map(task => ({
-                ...task,
-                priority: task.priority || 'medium',
-                category: task.category || 'personal',
-                dueDate: task.dueDate || null
-            }));
+            // Parse saved tasks or return empty array if none exist
+            return saved ? JSON.parse(saved) : [];
         } catch (error) {
             console.error('Failed to load tasks:', error);
-            return [];
+            return []; // Return empty array on error to prevent app crash
         }
     }
 
+    // Get the next available task ID from localStorage
     getNextTaskId() {
         try {
             const saved = localStorage.getItem('taskflow_counter');
+            // Parse saved counter or start from 1 if none exists
             return saved ? parseInt(saved) : 1;
         } catch (error) {
             console.error('Failed to load task counter:', error);
-            return 1;
+            return 1; // Default to 1 on error
         }
     }
 
+    // Escape HTML characters to prevent XSS attacks
     escapeHtml(unsafe) {
         return unsafe
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+            .replace(/&/g, "&amp;")   // Must be first to avoid double-escaping
+            .replace(/</g, "&lt;")    // Less than
+            .replace(/>/g, "&gt;")    // Greater than
+            .replace(/"/g, "&quot;")  // Double quotes
+            .replace(/'/g, "&#039;"); // Single quotes
     }
 
+    // Display toast notifications to provide user feedback
     showNotification(message, type = 'info') {
-        // Simple notification system
+        // Log to console for debugging
         console.log(`[${type.toUpperCase()}] ${message}`);
 
-        // Create notification element
+        // Create notification element with inline styles
         const notification = document.createElement('div');
         notification.style.cssText = `
             position: fixed;
@@ -336,26 +254,27 @@ class TaskFlow {
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         `;
 
-        // Set color based on type
+        // Color scheme for different notification types
         const colors = {
-            success: '#48bb78',
-            error: '#e53e3e',
-            warning: '#ed8936',
-            info: '#3182ce'
+            success: '#48bb78',  // Green for success
+            error: '#e53e3e',    // Red for errors
+            warning: '#ed8936',  // Orange for warnings
+            info: '#3182ce'      // Blue for info
         };
 
+        // Apply color and content
         notification.style.background = colors[type] || colors.info;
         notification.textContent = message;
 
         document.body.appendChild(notification);
 
-        // Animate in
+        // Animate in with delay for smooth transition
         setTimeout(() => {
             notification.style.opacity = '1';
             notification.style.transform = 'translateY(0)';
         }, 100);
 
-        // Remove after 3 seconds
+        // Auto-remove after 3 seconds with fade out animation
         setTimeout(() => {
             notification.style.opacity = '0';
             notification.style.transform = 'translateY(-20px)';
@@ -365,44 +284,48 @@ class TaskFlow {
         }, 3000);
     }
 
-    // Utility methods for potential future features
+    // Export all tasks to a JSON file for backup purposes
     exportTasks() {
+        // Convert tasks to formatted JSON string
         const dataStr = JSON.stringify(this.tasks, null, 2);
         const dataBlob = new Blob([dataStr], {type: 'application/json'});
         const url = URL.createObjectURL(dataBlob);
 
+        // Create temporary download link and trigger download
         const link = document.createElement('a');
         link.href = url;
         link.download = 'taskflow_backup.json';
         link.click();
 
+        // Clean up object URL to prevent memory leaks
         URL.revokeObjectURL(url);
         this.showNotification('Tasks exported successfully!', 'success');
     }
 
+    // Clear all tasks after user confirmation (destructive action)
     clearAllTasks() {
         if (confirm('Are you sure you want to delete ALL tasks? This cannot be undone.')) {
-            this.tasks = [];
-            this.saveTasks();
-            this.renderTasks();
-            this.updateStats();
+            this.tasks = []; // Empty the tasks array
+            this.saveTasks(); // Persist the empty state
+            this.renderTasks(); // Update UI to show empty state
+            this.updateStats(); // Reset statistics
             this.showNotification('All tasks cleared!', 'success');
         }
     }
 
+    // Calculate detailed statistics about tasks for analytics
     getTaskStats() {
         const now = new Date();
         const stats = {
             total: this.tasks.length,
             completed: this.tasks.filter(t => t.completed).length,
             pending: this.tasks.filter(t => !t.completed).length,
-            high: this.tasks.filter(t => t.priority === 'high').length,
-            medium: this.tasks.filter(t => t.priority === 'medium').length,
-            low: this.tasks.filter(t => t.priority === 'low').length,
+            // Tasks created today
             createdToday: this.tasks.filter(t => {
                 const taskDate = new Date(t.createdAt);
                 return taskDate.toDateString() === now.toDateString();
             }).length,
+            // Tasks completed today
             completedToday: this.tasks.filter(t => {
                 if (!t.completedAt) return false;
                 const completedDate = new Date(t.completedAt);
@@ -413,12 +336,13 @@ class TaskFlow {
     }
 }
 
-// Initialize the app when DOM is loaded
+// Initialize the TaskFlow application when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Create global instance for access from inline event handlers
     window.taskFlow = new TaskFlow();
 });
 
-// Export for potential testing
+// Export TaskFlow class for Node.js testing environments
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = TaskFlow;
 }

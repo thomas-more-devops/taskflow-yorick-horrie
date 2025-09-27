@@ -1,4 +1,6 @@
-/* Reset and Base Styles */
+/* ================================
+   RESET AND BASE STYLES
+   ================================ */
 * {
     margin: 0;
     padding: 0;
@@ -13,7 +15,9 @@ body {
     color: #333;
 }
 
-/* Container */
+/* ================================
+   MAIN CONTAINER LAYOUT
+   ================================ */
 .container {
     max-width: 800px;
     margin: 0 auto;
@@ -23,29 +27,33 @@ body {
     flex-direction: column;
 }
 
-/* Header */
+/* ================================
+   HEADER SECTION STYLING
+   ================================ */
 .header {
     text-align: center;
     margin-bottom: 3rem;
 }
 
+/* Glassmorphism effect for header content */
 .header-content {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
     padding: 2rem;
     border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    backdrop-filter: blur(10px); /* Glassmorphism blur effect */
 }
 
+/* Main application title with icon layout */
 .app-title {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #4a5568;
+    color: #4a5568; /* Dark gray text */
     margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.5rem; /* Space between icon and text */
 }
 
 .icon {
@@ -58,70 +66,58 @@ body {
     font-weight: 400;
 }
 
-/* Main Content */
+/* ================================
+   MAIN CONTENT AREA
+   ================================ */
 .main {
     flex: 1;
 }
 
-/* Task Input Section */
+/* ================================
+   TASK INPUT FORM SECTION
+   ================================ */
 .task-input-section {
     margin-bottom: 2rem;
 }
 
+/* Container for task input form with glassmorphism */
 .input-container {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.95); /* Semi-transparent background */
     padding: 1.5rem;
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Elevated appearance */
     display: flex;
-    gap: 1rem;
+    gap: 1rem; /* Space between input and button */
     align-items: center;
 }
 
+/* Main task input field styling */
 .task-input {
-    flex: 1;
-    border: 2px solid #e2e8f0;
+    flex: 1; /* Take up available space */
+    border: 2px solid #e2e8f0; /* Light gray border */
     border-radius: 12px;
     padding: 1rem 1.5rem;
     font-size: 1rem;
-    font-family: inherit;
-    transition: all 0.3s ease;
-    background: #f8fafc;
+    font-family: inherit; /* Use parent font */
+    transition: all 0.3s ease; /* Smooth animations */
+    background: #f8fafc; /* Very light gray background */
 }
 
+/* Focus state for task input with brand color */
 .task-input:focus {
-    outline: none;
-    border-color: #667eea;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    outline: none; /* Remove default browser outline */
+    border-color: #667eea; /* Brand color border */
+    background: white; /* Pure white background on focus */
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); /* Subtle focus ring */
 }
 
 .task-input::placeholder {
     color: #a0aec0;
 }
 
-/* Priority Select */
-.priority-select {
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 1rem 1.5rem;
-    font-size: 1rem;
-    font-family: inherit;
-    background: #f8fafc;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 140px;
-}
-
-.priority-select:focus {
-    outline: none;
-    border-color: #667eea;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
+/* Add task button with gradient background */
 .add-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Brand gradient */
     color: white;
     border: none;
     border-radius: 12px;
@@ -129,16 +125,17 @@ body {
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease; /* Smooth hover effects */
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    white-space: nowrap;
+    gap: 0.5rem; /* Space between icon and text */
+    white-space: nowrap; /* Prevent text wrapping */
 }
 
+/* Hover effect for add button with lift animation */
 .add-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    transform: translateY(-2px); /* Lift effect */
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3); /* Enhanced shadow */
 }
 
 .add-btn:active {
@@ -150,22 +147,26 @@ body {
     font-weight: bold;
 }
 
-/* Tasks Section */
+/* ================================
+   TASKS DISPLAY SECTION
+   ================================ */
+/* Main container for tasks list with glassmorphism */
 .tasks-section {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.95); /* Semi-transparent background */
     border-radius: 16px;
     padding: 1.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Elevated appearance */
     margin-bottom: 2rem;
 }
 
+/* Header section for tasks list with divider */
 .tasks-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Title on left, count on right */
     align-items: center;
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 2px solid #f1f5f9;
+    border-bottom: 2px solid #f1f5f9; /* Subtle divider line */
 }
 
 .tasks-header h2 {
@@ -174,375 +175,279 @@ body {
     color: #2d3748;
 }
 
-.header-controls {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.sort-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    color: #4a5568;
-}
-
-.sort-select {
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 0.5rem;
-    font-size: 0.9rem;
-    background: white;
-    cursor: pointer;
-}
-
+/* Task count badge styling */
 .task-count {
-    background: #e2e8f0;
-    color: #4a5568;
+    background: #e2e8f0; /* Light gray background */
+    color: #4a5568; /* Dark gray text */
     padding: 0.5rem 1rem;
-    border-radius: 20px;
+    border-radius: 20px; /* Pill shape */
     font-size: 0.9rem;
     font-weight: 500;
 }
 
+/* Container for individual task items */
 .tasks-list {
     display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    flex-direction: column; /* Stack tasks vertically */
+    gap: 0.75rem; /* Space between tasks */
 }
 
+/* Individual task item styling */
 .task-item {
-    background: #f8fafc;
-    border: 2px solid #e2e8f0;
+    background: #f8fafc; /* Very light gray background */
+    border: 1px solid #e2e8f0; /* Light border */
     border-radius: 12px;
     padding: 1rem 1.5rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    transition: all 0.3s ease;
+    justify-content: space-between; /* Content left, actions right */
+    transition: all 0.3s ease; /* Smooth animations */
     cursor: pointer;
 }
 
+/* Hover effect for task items with slide animation */
 .task-item:hover {
-    transform: translateX(4px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transform: translateX(4px); /* Slide right slightly */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
+    border-color: #cbd5e0; /* Darker border on hover */
 }
 
-/* Priority-specific styling */
-.task-item.priority-high {
-    border-left: 4px solid #e53e3e;
-    background: linear-gradient(135deg, #fed7d7 0%, #f8fafc 100%);
-}
-
-.task-item.priority-medium {
-    border-left: 4px solid #ed8936;
-    background: linear-gradient(135deg, #feebc8 0%, #f8fafc 100%);
-}
-
-.task-item.priority-low {
-    border-left: 4px solid #48bb78;
-    background: linear-gradient(135deg, #c6f6d5 0%, #f8fafc 100%);
-}
-
+/* Styling for completed tasks */
 .task-item.completed {
-    opacity: 0.7;
-    background: #f0fff4;
-    border-color: #9ae6b4;
+    background: #f0fff4; /* Light green background */
+    border-color: #9ae6b4; /* Green border */
+    opacity: 0.8; /* Slightly faded appearance */
 }
 
+/* Container for task checkbox and text */
 .task-content {
     display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    flex: 1;
+    align-items: center;
+    gap: 1rem; /* Space between checkbox and text */
+    flex: 1; /* Take up available space */
 }
 
-.task-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
+/* Custom checkbox styling for tasks */
 .task-checkbox {
     width: 20px;
     height: 20px;
-    border: 2px solid #cbd5e0;
-    border-radius: 6px;
+    border: 2px solid #cbd5e0; /* Gray border */
+    border-radius: 6px; /* Rounded corners */
     cursor: pointer;
-    position: relative;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-    margin-top: 2px;
+    position: relative; /* For checkmark positioning */
+    transition: all 0.3s ease; /* Smooth state changes */
 }
 
+/* Checked state for task checkbox */
 .task-checkbox.checked {
-    background: #48bb78;
-    border-color: #48bb78;
+    background: #48bb78; /* Green background */
+    border-color: #48bb78; /* Green border */
 }
 
+/* Checkmark symbol for completed tasks */
 .task-checkbox.checked::after {
-    content: '✓';
+    content: '✓'; /* Checkmark character */
     color: white;
     font-size: 14px;
     font-weight: bold;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); /* Center the checkmark */
 }
 
+/* Task text content styling */
 .task-text {
     font-size: 1rem;
-    color: #2d3748;
-    font-weight: 500;
-    line-height: 1.4;
+    color: #2d3748; /* Dark gray text */
+    transition: all 0.3s ease; /* Smooth animations */
 }
 
+/* Strike-through effect for completed task text */
 .task-item.completed .task-text {
-    text-decoration: line-through;
-    color: #718096;
+    text-decoration: line-through; /* Cross out completed tasks */
+    color: #718096; /* Muted gray color */
 }
 
-.task-meta {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-size: 0.85rem;
-}
-
-/* Priority Badge */
-.priority-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.priority-badge.priority-high {
-    background: #fed7d7;
-    color: #c53030;
-}
-
-.priority-badge.priority-medium {
-    background: #feebc8;
-    color: #d69e2e;
-}
-
-.priority-badge.priority-low {
-    background: #c6f6d5;
-    color: #2f855a;
-}
-
-.task-date {
-    color: #a0aec0;
-    font-size: 0.8rem;
-}
-
+/* Container for task action buttons */
 .task-actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.5rem; /* Space between action buttons */
 }
 
+/* Base styling for task action buttons */
 .task-btn {
-    background: none;
+    background: none; /* Transparent background */
     border: none;
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 8px;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease; /* Smooth hover effects */
     font-size: 1.1rem;
 }
 
+/* Edit button styling */
 .edit-btn {
-    color: #3182ce;
+    color: #3182ce; /* Blue color for edit action */
 }
 
+/* Hover effect for edit button */
 .edit-btn:hover {
-    background: #ebf8ff;
+    background: #ebf8ff; /* Light blue background on hover */
 }
 
+/* Delete button styling */
 .delete-btn {
-    color: #e53e3e;
+    color: #e53e3e; /* Red color for delete action */
 }
 
+/* Hover effect for delete button */
 .delete-btn:hover {
-    background: #fed7d7;
+    background: #fed7d7; /* Light red background on hover */
 }
 
-/* Empty State */
+/* ================================
+   EMPTY STATE WHEN NO TASKS
+   ================================ */
+/* Empty state display when no tasks exist */
 .empty-state {
     text-align: center;
     padding: 3rem 2rem;
-    color: #718096;
+    color: #718096; /* Muted gray text */
 }
 
+/* Large icon for empty state */
 .empty-icon {
-    font-size: 3rem;
+    font-size: 3rem; /* Large size for visual impact */
     margin-bottom: 1rem;
 }
 
+/* Empty state heading */
 .empty-state h3 {
     font-size: 1.25rem;
     margin-bottom: 0.5rem;
-    color: #4a5568;
+    color: #4a5568; /* Slightly darker than body text */
 }
 
-/* Stats Section */
+/* ================================
+   STATISTICS SECTION
+   ================================ */
+/* Statistics section with glassmorphism effect */
 .stats-section {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.95); /* Semi-transparent background */
     border-radius: 16px;
     padding: 1.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Elevated appearance */
 }
 
+/* Responsive grid for statistics cards */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive columns */
+    gap: 1rem; /* Space between stat cards */
 }
 
+/* Individual statistic card styling */
 .stat-card {
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); /* Subtle gradient */
     padding: 1.5rem;
     border-radius: 12px;
     text-align: center;
-    border: 1px solid #e2e8f0;
-    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0; /* Light border */
 }
 
-.stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.priority-stats {
-    background: linear-gradient(135deg, #fed7d7 0%, #feebc8 100%);
-    border-color: #e53e3e;
-}
-
+/* Large number display in stat cards */
 .stat-number {
     display: block;
-    font-size: 2rem;
-    font-weight: 700;
-    color: #2d3748;
+    font-size: 2rem; /* Large, prominent number */
+    font-weight: 700; /* Bold weight */
+    color: #2d3748; /* Dark gray */
     margin-bottom: 0.5rem;
 }
 
+/* Label text under stat numbers */
 .stat-label {
-    font-size: 0.9rem;
-    color: #718096;
+    font-size: 0.9rem; /* Smaller than number */
+    color: #718096; /* Muted gray */
     font-weight: 500;
 }
 
-/* Footer */
+/* ================================
+   FOOTER SECTION
+   ================================ */
+/* Footer section styling */
 .footer {
     text-align: center;
     margin-top: 2rem;
     padding: 1rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.8); /* Semi-transparent white text */
     font-size: 0.9rem;
 }
 
-/* Responsive Design */
+/* ================================
+   RESPONSIVE DESIGN BREAKPOINTS
+   ================================ */
+/* Tablet and mobile responsive styles */
 @media (max-width: 768px) {
     .container {
-        padding: 1rem 0.5rem;
+        padding: 1rem 0.5rem; /* Reduced padding on smaller screens */
     }
 
     .app-title {
-        font-size: 2rem;
+        font-size: 2rem; /* Smaller title on mobile */
     }
 
     .input-container {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: column; /* Stack input and button vertically */
+        align-items: stretch; /* Full width elements */
     }
 
     .add-btn {
-        justify-content: center;
+        justify-content: center; /* Center button text */
     }
 
     .task-item {
-        padding: 1rem;
+        padding: 1rem; /* Reduced padding for mobile */
     }
 
     .tasks-header {
-        flex-direction: column;
+        flex-direction: column; /* Stack header elements */
         gap: 1rem;
         align-items: flex-start;
     }
-
-    .header-controls {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .task-meta {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
 }
 
+/* Mobile phone responsive styles */
 @media (max-width: 480px) {
     .stats-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr; /* Single column on very small screens */
     }
 
     .app-title {
-        font-size: 1.75rem;
+        font-size: 1.75rem; /* Even smaller title */
     }
 
     .header-content {
-        padding: 1.5rem;
-    }
-
-    .input-container {
-        gap: 0.75rem;
-    }
-
-    .priority-select {
-        min-width: 120px;
+        padding: 1.5rem; /* Reduced header padding */
     }
 }
 
-/* Animation Classes */
+/* ================================
+   ANIMATIONS AND TRANSITIONS
+   ================================ */
+/* Slide-in animation for new tasks */
 @keyframes slideIn {
     from {
-        opacity: 0;
-        transform: translateY(20px);
+        opacity: 0; /* Start invisible */
+        transform: translateY(20px); /* Start below final position */
     }
     to {
-        opacity: 1;
-        transform: translateY(0);
+        opacity: 1; /* End fully visible */
+        transform: translateY(0); /* End at normal position */
     }
 }
 
+/* Apply slide-in animation to task items */
 .task-item {
-    animation: slideIn 0.3s ease;
-}
-
-/* Priority Animation */
-@keyframes priorityPulse {
-    0%, 100% {
-        box-shadow: 0 0 0 0 rgba(229, 62, 62, 0.4);
-    }
-    50% {
-        box-shadow: 0 0 0 8px rgba(229, 62, 62, 0);
-    }
-}
-
-.task-item.priority-high:not(.completed) {
-    animation: slideIn 0.3s ease;
-}
-
-.task-item.priority-high:not(.completed):hover {
-    animation: priorityPulse 2s infinite;
+    animation: slideIn 0.3s ease; /* Smooth entry animation */
 }
