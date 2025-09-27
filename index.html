@@ -1,36 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags for character set and responsive design -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Page title -->
     <title>TaskFlow - Task Management App</title>
-    <!-- Main stylesheet -->
     <link rel="stylesheet" href="styles/main.css">
-    <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <!-- Header section with app title and subtitle -->
         <header class="header">
             <div class="header-content">
                 <h1 class="app-title">
                     <span class="icon">📋</span>
                     TaskFlow
                 </h1>
-                <p class="app-subtitle">Streamline your productivity</p>
+                <p class="app-subtitle">Streamline your productivity with search & filters</p>
             </div>
         </header>
 
         <main class="main">
-            <!-- Task input section -->
             <div class="task-input-section">
                 <div class="input-container">
-                    <!-- Input for new task -->
                     <input type="text" id="taskInput" placeholder="What needs to be done?" class="task-input">
-                    <!-- Button to add new task -->
+                    <div class="input-options">
+                        <select id="prioritySelect" class="priority-select">
+                            <option value="medium">Medium Priority</option>
+                            <option value="high">High Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                        <select id="categorySelect" class="category-select">
+                            <option value="personal">Personal</option>
+                            <option value="work">Work</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="health">Health</option>
+                            <option value="study">Study</option>
+                        </select>
+                        <div class="date-input-container">
+                            <label for="dueDateInput" class="date-label">Due:</label>
+                            <input type="date" id="dueDateInput" class="date-input">
+                        </div>
+                    </div>
                     <button id="addTaskBtn" class="add-btn">
                         <span class="add-icon">+</span>
                         Add Task
@@ -38,18 +48,79 @@
                 </div>
             </div>
 
-            <!-- Tasks display section -->
+            <div class="search-filter-section">
+                <div class="search-container">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchInput" placeholder="Search tasks..." class="search-input">
+                        <button id="clearSearch" class="clear-search" title="Clear search">✕</button>
+                    </div>
+                </div>
+
+                <div class="filter-container">
+                    <h3>Quick Filters:</h3>
+                    <div class="quick-filters">
+                        <button class="filter-btn active" data-filter="all">
+                            <span class="filter-icon">📋</span>
+                            All Tasks
+                        </button>
+                        <button class="filter-btn" data-filter="completed">
+                            <span class="filter-icon">✅</span>
+                            Completed
+                        </button>
+                        <button class="filter-btn" data-filter="pending">
+                            <span class="filter-icon">⏳</span>
+                            Pending
+                        </button>
+                        <button class="filter-btn" data-filter="recent">
+                            <span class="filter-icon">🆕</span>
+                            Recent
+                        </button>
+                    </div>
+                </div>
+
+                <div class="advanced-filters">
+                    <button id="toggleAdvanced" class="toggle-advanced">
+                        <span>Advanced Filters</span>
+                        <span class="toggle-icon">▼</span>
+                    </button>
+                    <div id="advancedPanel" class="advanced-panel">
+                        <div class="filter-group">
+                            <label>Sort by:</label>
+                            <select id="sortSelect" class="sort-select">
+                                <option value="created-desc">Newest First</option>
+                                <option value="created-asc">Oldest First</option>
+                                <option value="alphabetical">Alphabetical</option>
+                                <option value="length">By Length</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Text Length:</label>
+                            <div class="length-filters">
+                                <button class="length-btn" data-length="all">All</button>
+                                <button class="length-btn" data-length="short">Short</button>
+                                <button class="length-btn" data-length="medium">Medium</button>
+                                <button class="length-btn" data-length="long">Long</button>
+                            </div>
+                        </div>
+                        <div class="filter-actions">
+                            <button id="clearAllFilters" class="clear-filters-btn">Clear All Filters</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="tasks-section">
                 <div class="tasks-header">
-                    <h2>Your Tasks</h2>
-                    <!-- Displays number of tasks -->
-                    <span id="taskCount" class="task-count">0 tasks</span>
+                    <h2>Your Tasks (Search & Filter Focus)</h2>
+                    <div class="header-info">
+                        <span id="searchResults" class="search-results"></span>
+                        <span id="taskCount" class="task-count">0 tasks</span>
+                    </div>
                 </div>
-                <!-- Container for dynamically added tasks -->
                 <div id="tasksList" class="tasks-list">
                     <!-- Tasks will be dynamically added here -->
                 </div>
-                <!-- Empty state message when no tasks exist -->
                 <div id="emptyState" class="empty-state">
                     <div class="empty-icon">✨</div>
                     <h3>No tasks yet</h3>
@@ -57,35 +128,40 @@
                 </div>
             </div>
 
-            <!-- Statistics section for tasks -->
             <div class="stats-section">
                 <div class="stats-grid">
-                    <!-- Total tasks stat -->
                     <div class="stat-card">
                         <span class="stat-number" id="totalTasks">0</span>
                         <span class="stat-label">Total Tasks</span>
                     </div>
-                    <!-- Completed tasks stat -->
                     <div class="stat-card">
                         <span class="stat-number" id="completedTasks">0</span>
                         <span class="stat-label">Completed</span>
                     </div>
-                    <!-- Pending tasks stat -->
                     <div class="stat-card">
                         <span class="stat-number" id="pendingTasks">0</span>
                         <span class="stat-label">Pending</span>
+                    </div>
+                    <div class="stat-card search-stats">
+                        <span class="stat-number" id="filteredTasks">0</span>
+                        <span class="stat-label">Filtered</span>
+                    </div>
+                </div>
+
+                <div class="search-analytics">
+                    <h3>Task Analytics</h3>
+                    <div id="taskAnalytics" class="analytics-list">
+                        <!-- Analytics will be populated here -->
                     </div>
                 </div>
             </div>
         </main>
 
-        <!-- Footer section -->
         <footer class="footer">
             <p>&copy; 2024 TaskFlow. Built with HTML, CSS, and JavaScript.</p>
         </footer>
     </div>
 
-    <!-- Main JavaScript file -->
     <script src="scripts/app.js"></script>
 </body>
 </html>
