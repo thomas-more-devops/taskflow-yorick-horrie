@@ -85,23 +85,41 @@ body {
     align-items: center;
 }
 
-.priority-select {
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 0.75rem;
-    font-size: 0.9rem;
-    font-family: inherit;
+.date-input-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     background: #f8fafc;
-    color: #4a5568;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
     transition: all 0.3s ease;
-    cursor: pointer;
 }
 
-.priority-select:focus {
-    outline: none;
+.date-input-container:focus-within {
     border-color: #667eea;
     background: white;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.date-label {
+    font-size: 0.9rem;
+    color: #4a5568;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.date-input {
+    border: none;
+    background: transparent;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: #4a5568;
+    cursor: pointer;
+}
+
+.date-input:focus {
+    outline: none;
 }
 
 .task-input {
@@ -154,6 +172,60 @@ body {
 .add-icon {
     font-size: 1.2rem;
     font-weight: bold;
+}
+
+/* Due Date Filter Section */
+.due-date-filters {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.due-date-filters h3 {
+    margin-bottom: 1rem;
+    color: #2d3748;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.due-date-filter-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+}
+
+.due-date-filter-btn {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    color: #4a5568;
+}
+
+.due-date-filter-btn:hover {
+    background: #e2e8f0;
+    transform: translateY(-1px);
+}
+
+.due-date-filter-btn.active {
+    background: #667eea;
+    border-color: #667eea;
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.filter-icon {
+    font-size: 1rem;
 }
 
 /* Tasks Section */
@@ -219,23 +291,23 @@ body {
     opacity: 0.8;
 }
 
-/* Priority-based styling */
-.task-item.priority-high {
+.task-item.overdue {
     border-left: 4px solid #e53e3e;
     background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+    animation: pulse-warning 2s infinite;
 }
 
-.task-item.priority-medium {
+.task-item.due-today {
     border-left: 4px solid #ed8936;
     background: linear-gradient(135deg, #fffaf0 0%, #feebc8 100%);
 }
 
-.task-item.priority-low {
-    border-left: 4px solid #38a169;
-    background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+@keyframes pulse-warning {
+    0%, 100% { box-shadow: 0 4px 15px rgba(229, 62, 62, 0.2); }
+    50% { box-shadow: 0 4px 15px rgba(229, 62, 62, 0.4); }
 }
 
-.priority-badge {
+.due-date-badge {
     padding: 0.25rem 0.75rem;
     border-radius: 12px;
     font-size: 0.75rem;
@@ -244,21 +316,24 @@ body {
     display: flex;
     align-items: center;
     gap: 0.25rem;
+    background: #e2e8f0;
+    color: #4a5568;
 }
 
-.priority-badge.priority-high {
-    background: #e53e3e;
-    color: white;
-}
-
-.priority-badge.priority-medium {
+.due-date-badge.due-today {
     background: #ed8936;
     color: white;
 }
 
-.priority-badge.priority-low {
-    background: #38a169;
+.due-date-badge.overdue {
+    background: #e53e3e;
     color: white;
+    animation: pulse-badge 1.5s infinite;
+}
+
+@keyframes pulse-badge {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
 }
 
 .task-content {
@@ -366,6 +441,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 1rem;
+    margin-bottom: 2rem;
 }
 
 .stat-card {
@@ -376,12 +452,12 @@ body {
     border: 1px solid #e2e8f0;
 }
 
-.stat-card.priority-stats {
+.stat-card.overdue-stats {
     background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
     border-color: #feb2b2;
 }
 
-.priority-stats .stat-number {
+.overdue-stats .stat-number {
     color: #e53e3e;
 }
 
@@ -396,6 +472,44 @@ body {
 .stat-label {
     font-size: 0.9rem;
     color: #718096;
+    font-weight: 500;
+}
+
+.detailed-analytics {
+    border-top: 2px solid #f1f5f9;
+    padding-top: 1.5rem;
+}
+
+.analytics-section h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1rem;
+}
+
+.due-date-stats-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.stat-icon {
+    font-size: 1.2rem;
+}
+
+.stat-text {
+    font-size: 0.9rem;
+    color: #4a5568;
     font-weight: 500;
 }
 
@@ -442,7 +556,11 @@ body {
         align-items: flex-start;
     }
 
-    .priority-badge {
+    .due-date-filter-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .due-date-badge {
         font-size: 0.7rem;
         padding: 0.2rem 0.5rem;
     }
@@ -467,9 +585,17 @@ body {
         gap: 0.5rem;
     }
 
-    .priority-badge {
+    .due-date-badge {
         margin-left: 0;
         align-self: flex-start;
+    }
+
+    .due-date-filter-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .due-date-stats-list {
+        grid-template-columns: 1fr;
     }
 }
 
