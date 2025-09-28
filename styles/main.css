@@ -86,18 +86,14 @@ body {
     padding: 1.5rem;
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Elevated appearance */
-}
-
-/* FEATURE 1 ADDITION: Input options grid layout */
-.input-options {
-    display: grid;
-    grid-template-columns: 2fr 1fr auto; /* Text input takes most space, priority medium, button auto */
-    gap: 1rem; /* Space between elements */
+    display: flex;
+    gap: 1rem; /* Space between input and button */
     align-items: center;
 }
 
 /* Main task input field styling */
 .task-input {
+    flex: 1; /* Take up available space */
     border: 2px solid #e2e8f0; /* Light gray border */
     border-radius: 12px;
     padding: 1rem 1.5rem;
@@ -117,25 +113,6 @@ body {
 
 .task-input::placeholder {
     color: #a0aec0;
-}
-
-/* FEATURE 1 ADDITION: Priority selection dropdown styling */
-.priority-select {
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 1rem 1.5rem;
-    font-size: 1rem;
-    font-family: inherit;
-    background: #f8fafc;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.priority-select:focus {
-    outline: none;
-    border-color: #667eea;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 /* Add task button with gradient background */
@@ -228,19 +205,6 @@ body {
     cursor: pointer;
 }
 
-/* FEATURE 1 ADDITION: Priority-based left border colors */
-.task-item.priority-high {
-    border-left: 4px solid #e53e3e; /* Red border for high priority */
-}
-
-.task-item.priority-medium {
-    border-left: 4px solid #ed8936; /* Orange border for medium priority */
-}
-
-.task-item.priority-low {
-    border-left: 4px solid #48bb78; /* Green border for low priority */
-}
-
 /* Hover effect for task items with slide animation */
 .task-item:hover {
     transform: translateX(4px); /* Slide right slightly */
@@ -303,32 +267,6 @@ body {
 .task-item.completed .task-text {
     text-decoration: line-through; /* Cross out completed tasks */
     color: #718096; /* Muted gray color */
-}
-
-/* FEATURE 1 ADDITION: Priority badge styling */
-.priority-badge {
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-left: auto; /* Push to the right */
-}
-
-.priority-badge.priority-high {
-    background: #fed7d7;
-    color: #c53030;
-}
-
-.priority-badge.priority-medium {
-    background: #feebc8;
-    color: #c05621;
-}
-
-.priority-badge.priority-low {
-    background: #c6f6d5;
-    color: #2f855a;
 }
 
 /* Container for task action buttons */
@@ -459,10 +397,13 @@ body {
         font-size: 2rem; /* Smaller title on mobile */
     }
 
-    /* FEATURE 1 ADDITION: Responsive input grid */
-    .input-options {
-        grid-template-columns: 1fr; /* Single column on mobile */
-        gap: 1rem;
+    .input-container {
+        flex-direction: column; /* Stack input and button vertically */
+        align-items: stretch; /* Full width elements */
+    }
+
+    .add-btn {
+        justify-content: center; /* Center button text */
     }
 
     .task-item {
