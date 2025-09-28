@@ -30,6 +30,28 @@
                 <div class="input-container">
                     <!-- Input for new task -->
                     <input type="text" id="taskInput" placeholder="What needs to be done?" class="task-input">
+                    <!-- Input options - reserved spaces for all features -->
+                    <div class="input-options">
+                        <!-- Feature 1: Priority System -->
+                        <select id="prioritySelect" class="priority-select">
+                            <option value="medium">Medium Priority</option>
+                            <option value="high">High Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                        <!-- Feature 2: Category Management -->
+                        <select id="categorySelect" class="category-select">
+                            <option value="personal">Personal</option>
+                            <option value="work">Work</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="health">Health</option>
+                            <option value="study">Study</option>
+                        </select>
+                        <!-- Feature 3: Due Date System (hidden until feature 3) -->
+                        <div id="dueDateContainer" class="date-input-container" style="display:none">
+                            <label for="dueDateInput" class="date-label">Due:</label>
+                            <input type="date" id="dueDateInput" class="date-input">
+                        </div>
+                    </div>
                     <!-- Button to add new task -->
                     <button id="addTaskBtn" class="add-btn">
                         <span class="add-icon">+</span>
@@ -74,6 +96,38 @@
                     <div class="stat-card">
                         <span class="stat-number" id="pendingTasks">0</span>
                         <span class="stat-label">Pending</span>
+                    </div>
+                    <!-- Feature 1: Priority Statistics -->
+                    <div class="stat-card priority-stats">
+                        <span class="stat-number" id="highPriorityTasks">0</span>
+                        <span class="stat-label">High Priority</span>
+                    </div>
+                    <!-- Feature 3: Due Date Statistics (hidden until feature 3) -->
+                    <div class="stat-card overdue-stats" style="display:none">
+                        <span class="stat-number" id="overdueTasks">0</span>
+                        <span class="stat-label">Overdue</span>
+                    </div>
+                    <!-- Feature 2: Category Statistics -->
+                    <div class="stat-card category-stats">
+                        <span class="stat-number" id="categoriesUsed">0</span>
+                        <span class="stat-label">Categories</span>
+                    </div>
+                </div>
+
+                <!-- Feature 2 & 3: Detailed Analytics -->
+                <div class="detailed-analytics">
+                    <div class="analytics-section">
+                        <h3>Category Breakdown</h3>
+                        <div id="categoryStats" class="category-stats-list">
+                            <!-- Category statistics will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="analytics-section">
+                        <h3>Due Date Overview</h3>
+                        <div id="dueDateStats" class="due-date-stats-list">
+                            <!-- Due date statistics will be populated here -->
+                        </div>
                     </div>
                 </div>
             </div>
