@@ -227,6 +227,21 @@ body {
     flex: 1; /* Take up available space */
 }
 
+/* Task info container (text + badges) */
+.task-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+/* Task badges container */
+.task-badges {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
 /* Custom checkbox styling for tasks */
 .task-checkbox {
     width: 20px;
@@ -450,4 +465,577 @@ body {
 /* Apply slide-in animation to task items */
 .task-item {
     animation: slideIn 0.3s ease; /* Smooth entry animation */
+}
+
+/* ================================
+   FEATURE 1: PRIORITY SYSTEM
+   ================================ */
+
+/* Input options grid layout */
+.input-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* 3 equal columns for all features */
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* Priority select dropdown styling */
+.priority-select {
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.priority-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Priority badge styling */
+.priority-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.priority-badge.high {
+    background: #fed7d7;
+    color: #c53030;
+}
+
+.priority-badge.medium {
+    background: #fef5e7;
+    color: #d69e2e;
+}
+
+.priority-badge.low {
+    background: #e6fffa;
+    color: #319795;
+}
+
+/* Priority-based task border colors */
+.task-item.priority-high {
+    border-left: 4px solid #e53e3e;
+}
+
+.task-item.priority-medium {
+    border-left: 4px solid #d69e2e;
+}
+
+.task-item.priority-low {
+    border-left: 4px solid #38a169;
+}
+
+/* ================================
+   FEATURE 2: CATEGORY SYSTEM
+   ================================ */
+
+/* Category select dropdown styling */
+.category-select {
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.category-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Category badge styling */
+.category-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.category-badge.work {
+    background: rgba(49, 130, 206, 0.1);
+    color: #3182ce;
+}
+
+.category-badge.personal {
+    background: rgba(128, 90, 213, 0.1);
+    color: #805ad5;
+}
+
+.category-badge.shopping {
+    background: rgba(56, 161, 105, 0.1);
+    color: #38a169;
+}
+
+.category-badge.health {
+    background: rgba(229, 62, 62, 0.1);
+    color: #e53e3e;
+}
+
+.category-badge.study {
+    background: rgba(214, 158, 46, 0.1);
+    color: #d69e2e;
+}
+
+/* Category statistics list styling */
+.category-stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.category-stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.category-stat-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.category-stat-icon {
+    font-size: 1.1rem;
+}
+
+.category-stat-name {
+    font-weight: 500;
+    color: #2d3748;
+}
+
+.category-stat-count {
+    font-weight: 600;
+    color: #4a5568;
+}
+
+/* ================================
+   FEATURE 3: DUE DATE SYSTEM
+   ================================ */
+
+/* Date input container styling */
+.date-input-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.date-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #4a5568;
+}
+
+.date-input {
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.date-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Due date badge styling */
+.due-date-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.due-date-badge.due-today {
+    background: rgba(255, 235, 59, 0.2);
+    color: #f57c00;
+}
+
+.due-date-badge.overdue {
+    background: rgba(229, 62, 62, 0.1);
+    color: #e53e3e;
+    animation: pulse 2s infinite;
+}
+
+.due-date-badge.upcoming {
+    background: rgba(56, 161, 105, 0.1);
+    color: #38a169;
+}
+
+/* Overdue pulse animation */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+/* Due date statistics list styling */
+.due-date-stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.due-date-stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.due-date-stat-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.due-date-stat-icon {
+    font-size: 1.1rem;
+}
+
+.due-date-stat-label {
+    font-weight: 500;
+    color: #2d3748;
+}
+
+.due-date-stat-count {
+    font-weight: 600;
+    color: #4a5568;
+}
+
+/* ================================
+   RESPONSIVE DESIGN FOR NEW FEATURES
+   ================================ */
+
+/* Mobile responsive styles for input options */
+@media (max-width: 768px) {
+    .input-options {
+        grid-template-columns: 1fr; /* Single column on mobile */
+        gap: 0.75rem;
+    }
+}
+
+/* ================================
+   FEATURE 4: SEARCH & FILTER SYSTEM
+   ================================ */
+
+/* Search & Filter Section */
+.search-filter-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+/* Search Container */
+.search-container {
+    margin-bottom: 1.5rem;
+}
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.search-input-wrapper:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-icon {
+    padding: 0 1rem;
+    color: #a0aec0;
+    font-size: 1.1rem;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 1rem 0;
+    font-size: 1rem;
+    color: #2d3748;
+}
+
+.search-input:focus {
+    outline: none;
+}
+
+.clear-search {
+    background: none;
+    border: none;
+    padding: 0 1rem;
+    color: #a0aec0;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: none;
+    transition: color 0.3s ease;
+}
+
+.clear-search:hover {
+    color: #e53e3e;
+}
+
+/* Filter Container */
+.filter-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.filter-section h3,
+.category-filters h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.75rem;
+}
+
+/* Quick Filters */
+.quick-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #4a5568;
+}
+
+.filter-btn:hover {
+    border-color: #cbd5e0;
+    background: #f8fafc;
+}
+
+.filter-btn.active {
+    border-color: #667eea;
+    background: #667eea;
+    color: white;
+}
+
+.filter-icon {
+    font-size: 1rem;
+}
+
+/* Category Filter Buttons */
+.category-filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.category-filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #4a5568;
+}
+
+.category-filter-btn:hover {
+    border-color: #cbd5e0;
+    background: #f8fafc;
+}
+
+.category-filter-btn.active {
+    border-color: #805ad5;
+    background: #805ad5;
+    color: white;
+}
+
+/* Advanced Filters */
+.toggle-advanced {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #e2e8f0;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    color: #4a5568;
+}
+
+.toggle-advanced:hover {
+    border-color: #cbd5e0;
+    background: #f8fafc;
+}
+
+.toggle-icon {
+    transition: transform 0.3s ease;
+}
+
+.toggle-advanced.active .toggle-icon {
+    transform: rotate(180deg);
+}
+
+.advanced-panel {
+    display: none;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.advanced-panel.active {
+    display: block;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.filter-group label {
+    font-weight: 500;
+    color: #4a5568;
+    min-width: 80px;
+}
+
+.sort-select {
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.sort-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.clear-filters-btn {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #e53e3e;
+    background: white;
+    color: #e53e3e;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.clear-filters-btn:hover {
+    background: #e53e3e;
+    color: white;
+}
+
+/* Tasks Header Updates */
+.header-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.search-results {
+    font-size: 0.9rem;
+    color: #667eea;
+    font-weight: 500;
+}
+
+/* Search Highlighting */
+.search-highlight {
+    background: rgba(255, 235, 59, 0.3);
+    padding: 0.1rem 0.2rem;
+    border-radius: 3px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .quick-filters,
+    .category-filter-buttons {
+        gap: 0.25rem;
+    }
+
+    .filter-btn,
+    .category-filter-btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .filter-container {
+        gap: 1rem;
+    }
+
+    .filter-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .filter-group label {
+        min-width: auto;
+    }
+
+    .header-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
 }
