@@ -160,6 +160,8 @@ class TaskFlow {
             study: '#805ad5'
         };
         return colors[category] || '#38a169';
+    }
+
     getPriorityValue(priority) {
         const priorities = { high: 3, medium: 2, low: 1 };
         return priorities[priority] || 2;
@@ -198,7 +200,7 @@ class TaskFlow {
             // Then sort by category
             if (a.category !== b.category) {
                 return a.category.localeCompare(b.category);
-
+            }
             // Then sort by priority (high to low)
             const priorityDiff = this.getPriorityValue(b.priority) - this.getPriorityValue(a.priority);
             if (priorityDiff !== 0) {
@@ -218,6 +220,7 @@ class TaskFlow {
                     <span class="task-text">${this.escapeHtml(task.text)}</span>
                     <span class="category-badge category-${task.category}" style="background-color: ${this.getCategoryColor(task.category)}">
                         ${this.getCategoryIcon(task.category)} ${task.category.charAt(0).toUpperCase() + task.category.slice(1)}
+                    </span>
                     <span class="priority-badge priority-${task.priority}">
                         ${this.getPriorityIcon(task.priority)} ${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
                     </span>
@@ -312,7 +315,7 @@ class TaskFlow {
             // Add default priority to existing tasks for backward compatibility
             return tasks.map(task => ({
                 ...task,
-                priority: task.priority || 'medium'
+                priority: task.priority || 'medium',
                 category: task.category || 'personal'
             }));
         } catch (error) {
