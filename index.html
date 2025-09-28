@@ -1,19 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags for character set and responsive design -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Page title -->
     <title>TaskFlow - Task Management App</title>
-    <!-- Main stylesheet -->
     <link rel="stylesheet" href="styles/main.css">
-    <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <!-- Header section with app title and subtitle -->
         <header class="header">
             <div class="header-content">
                 <h1 class="app-title">
@@ -25,34 +20,9 @@
         </header>
 
         <main class="main">
-            <!-- Task input section -->
             <div class="task-input-section">
                 <div class="input-container">
-                    <!-- Input for new task -->
                     <input type="text" id="taskInput" placeholder="What needs to be done?" class="task-input">
-                    <!-- Input options - reserved spaces for all features -->
-                    <div class="input-options">
-                        <!-- Feature 1: Priority System -->
-                        <select id="prioritySelect" class="priority-select">
-                            <option value="medium">Medium Priority</option>
-                            <option value="high">High Priority</option>
-                            <option value="low">Low Priority</option>
-                        </select>
-                        <!-- Feature 2: Category Management -->
-                        <select id="categorySelect" class="category-select">
-                            <option value="personal">Personal</option>
-                            <option value="work">Work</option>
-                            <option value="shopping">Shopping</option>
-                            <option value="health">Health</option>
-                            <option value="study">Study</option>
-                        </select>
-                        <!-- Feature 3: Due Date System (hidden until feature 3) -->
-                        <div id="dueDateContainer" class="date-input-container" style="display:none">
-                            <label for="dueDateInput" class="date-label">Due:</label>
-                            <input type="date" id="dueDateInput" class="date-input">
-                        </div>
-                    </div>
-                    <!-- Button to add new task -->
                     <button id="addTaskBtn" class="add-btn">
                         <span class="add-icon">+</span>
                         Add Task
@@ -60,18 +30,14 @@
                 </div>
             </div>
 
-            <!-- Tasks display section -->
             <div class="tasks-section">
                 <div class="tasks-header">
                     <h2>Your Tasks</h2>
-                    <!-- Displays number of tasks -->
                     <span id="taskCount" class="task-count">0 tasks</span>
                 </div>
-                <!-- Container for dynamically added tasks -->
                 <div id="tasksList" class="tasks-list">
                     <!-- Tasks will be dynamically added here -->
                 </div>
-                <!-- Empty state message when no tasks exist -->
                 <div id="emptyState" class="empty-state">
                     <div class="empty-icon">✨</div>
                     <h3>No tasks yet</h3>
@@ -79,67 +45,29 @@
                 </div>
             </div>
 
-            <!-- Statistics section for tasks -->
             <div class="stats-section">
                 <div class="stats-grid">
-                    <!-- Total tasks stat -->
                     <div class="stat-card">
                         <span class="stat-number" id="totalTasks">0</span>
                         <span class="stat-label">Total Tasks</span>
                     </div>
-                    <!-- Completed tasks stat -->
                     <div class="stat-card">
                         <span class="stat-number" id="completedTasks">0</span>
                         <span class="stat-label">Completed</span>
                     </div>
-                    <!-- Pending tasks stat -->
                     <div class="stat-card">
                         <span class="stat-number" id="pendingTasks">0</span>
                         <span class="stat-label">Pending</span>
-                    </div>
-                    <!-- Feature 1: Priority Statistics -->
-                    <div class="stat-card priority-stats">
-                        <span class="stat-number" id="highPriorityTasks">0</span>
-                        <span class="stat-label">High Priority</span>
-                    </div>
-                    <!-- Feature 3: Due Date Statistics (hidden until feature 3) -->
-                    <div class="stat-card overdue-stats" style="display:none">
-                        <span class="stat-number" id="overdueTasks">0</span>
-                        <span class="stat-label">Overdue</span>
-                    </div>
-                    <!-- Feature 2: Category Statistics -->
-                    <div class="stat-card category-stats">
-                        <span class="stat-number" id="categoriesUsed">0</span>
-                        <span class="stat-label">Categories</span>
-                    </div>
-                </div>
-
-                <!-- Feature 2 & 3: Detailed Analytics -->
-                <div class="detailed-analytics">
-                    <div class="analytics-section">
-                        <h3>Category Breakdown</h3>
-                        <div id="categoryStats" class="category-stats-list">
-                            <!-- Category statistics will be populated here -->
-                        </div>
-                    </div>
-
-                    <div class="analytics-section">
-                        <h3>Due Date Overview</h3>
-                        <div id="dueDateStats" class="due-date-stats-list">
-                            <!-- Due date statistics will be populated here -->
-                        </div>
                     </div>
                 </div>
             </div>
         </main>
 
-        <!-- Footer section -->
         <footer class="footer">
             <p>&copy; 2024 TaskFlow. Built with HTML, CSS, and JavaScript.</p>
         </footer>
     </div>
 
-    <!-- Main JavaScript file -->
     <script src="scripts/app.js"></script>
 </body>
 </html>
