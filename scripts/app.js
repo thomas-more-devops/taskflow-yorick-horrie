@@ -45,12 +45,17 @@ class TaskFlow {
             return;
         }
 
+        // Feature 1: Get priority value
+        const prioritySelect = document.getElementById('prioritySelect');
+        const priority = prioritySelect ? prioritySelect.value : 'medium';
+
         const newTask = {
             id: this.taskIdCounter++,
             text: taskText,
             completed: false,
             createdAt: new Date().toISOString(),
-            completedAt: null
+            completedAt: null,
+            priority: priority  // Feature 1: Add priority
         };
 
         this.tasks.push(newTask);
@@ -59,6 +64,12 @@ class TaskFlow {
         this.updateStats();
         
         taskInput.value = '';
+
+        // Feature 1: Reset priority selector
+        if (prioritySelect) {
+            prioritySelect.value = 'medium';
+        }
+
         taskInput.focus();
         
         this.showNotification('Task added successfully!', 'success');
@@ -114,21 +125,38 @@ class TaskFlow {
         tasksList.style.display = 'flex';
         emptyState.style.display = 'none';
 
-        // Sort tasks: incomplete first, then by creation date
+        // Feature 1: Sort tasks by priority, then completion, then creation date
         const sortedTasks = [...this.tasks].sort((a, b) => {
             if (a.completed !== b.completed) {
                 return a.completed - b.completed;
             }
+
+            // Feature 1: Sort by priority (high > medium > low)
+            const priorityOrder = { high: 3, medium: 2, low: 1 };
+            const aPriority = priorityOrder[a.priority || 'medium'];
+            const bPriority = priorityOrder[b.priority || 'medium'];
+
+            if (aPriority !== bPriority) {
+                return bPriority - aPriority;
+            }
+
             return new Date(b.createdAt) - new Date(a.createdAt);
         });
 
-        tasksList.innerHTML = sortedTasks.map(task => `
-            <div class="task-item ${task.completed ? 'completed' : ''}" data-task-id="${task.id}">
+        tasksList.innerHTML = sortedTasks.map(task => {
+            // Feature 1: Get priority and add priority classes
+            const priority = task.priority || 'medium';
+            const priorityClass = `priority-${priority}`;
+
+            return (
+            `
+            <div class="task-item ${task.completed ? 'completed' : ''} ${priorityClass}" data-task-id="${task.id}">
                 <div class="task-content">
-                    <div class="task-checkbox ${task.completed ? 'checked' : ''}" 
+                    <div class="task-checkbox ${task.completed ? 'checked' : ''}"
                          onclick="taskFlow.toggleTask(${task.id})">
                     </div>
                     <span class="task-text">${this.escapeHtml(task.text)}</span>
+                    <span class="priority-badge ${priority}">${priority}</span>
                 </div>
                 <div class="task-actions">
                     <button class="task-btn edit-btn" onclick="taskFlow.editTask(${task.id})" title="Edit task">
@@ -139,7 +167,9 @@ class TaskFlow {
                     </button>
                 </div>
             </div>
-        `).join('');
+            `
+            );
+        }).join('');
     }
 
     updateStats() {
@@ -147,10 +177,21 @@ class TaskFlow {
         const completedTasks = this.tasks.filter(task => task.completed).length;
         const pendingTasks = totalTasks - completedTasks;
 
+        // Feature 1: Calculate high priority tasks
+        const highPriorityTasks = this.tasks.filter(task =>
+            !task.completed && (task.priority === 'high')
+        ).length;
+
         document.getElementById('totalTasks').textContent = totalTasks;
         document.getElementById('completedTasks').textContent = completedTasks;
         document.getElementById('pendingTasks').textContent = pendingTasks;
-        
+
+        // Feature 1: Update high priority tasks stat
+        const highPriorityElement = document.getElementById('highPriorityTasks');
+        if (highPriorityElement) {
+            highPriorityElement.textContent = highPriorityTasks;
+        }
+
         // Update task count in header
         const taskCount = document.getElementById('taskCount');
         taskCount.textContent = `${totalTasks} ${totalTasks === 1 ? 'task' : 'tasks'}`;
@@ -169,7 +210,13 @@ class TaskFlow {
     loadTasks() {
         try {
             const saved = localStorage.getItem('taskflow_tasks');
-            return saved ? JSON.parse(saved) : [];
+            const tasks = saved ? JSON.parse(saved) : [];
+
+            // Feature 1: Add default priority for backward compatibility
+            return tasks.map(task => ({
+                ...task,
+                priority: task.priority || 'medium'
+            }));
         } catch (error) {
             console.error('Failed to load tasks:', error);
             return [];
