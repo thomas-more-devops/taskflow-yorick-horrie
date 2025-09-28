@@ -227,6 +227,21 @@ body {
     flex: 1; /* Take up available space */
 }
 
+/* Task info container (text + badges) */
+.task-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+/* Task badges container */
+.task-badges {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
 /* Custom checkbox styling for tasks */
 .task-checkbox {
     width: 20px;

@@ -94,6 +94,7 @@ class TaskFlow {
         this.updateStats(); // Update statistics
 
         // Clear input and reset form
+        // Clear input and reset form
         taskInput.value = '';
         prioritySelect.value = 'medium'; // Reset to default priority
         categorySelect.value = 'personal'; // Reset to default category
@@ -167,7 +168,9 @@ class TaskFlow {
         emptyState.style.display = 'none';
 
         // Feature 1: Sort tasks by priority, then completion, then creation date
+        // Feature 1: Sort tasks by priority, then completion, then creation date
         const sortedTasks = [...this.tasks].sort((a, b) => {
+            // First sort by completion status (incomplete first)
             // First sort by completion status (incomplete first)
             if (a.completed !== b.completed) {
                 return a.completed - b.completed;
@@ -180,7 +183,20 @@ class TaskFlow {
 
             if (aPriority !== bPriority) {
                 return bPriority - aPriority; // Higher priority first
+                return a.completed - b.completed;
             }
+
+            // Then sort by priority (high > medium > low)
+            const priorityOrder = { high: 3, medium: 2, low: 1 };
+            const aPriority = priorityOrder[a.priority || 'medium'];
+            const bPriority = priorityOrder[b.priority || 'medium'];
+
+            if (aPriority !== bPriority) {
+                return bPriority - aPriority; // Higher priority first
+            }
+
+            // Finally sort by creation date (newest first)
+            return new Date(b.createdAt) - new Date(a.createdAt);
 
             // Finally sort by creation date (newest first)
             return new Date(b.createdAt) - new Date(a.createdAt);
@@ -266,6 +282,18 @@ class TaskFlow {
     loadTasks() {
         try {
             const saved = localStorage.getItem('taskflow_tasks');
+            const tasks = saved ? JSON.parse(saved) : [];
+
+            // Feature compatibility: Add default values for missing properties
+            return tasks.map(task => ({
+                ...task,
+                // Feature 1: Default priority if missing
+                priority: task.priority || 'medium',
+                // Feature 2: Default category if missing (reserved)
+                category: task.category || 'personal',
+                // Feature 3: Default due date if missing (reserved)
+                dueDate: task.dueDate || null
+            }));
             const tasks = saved ? JSON.parse(saved) : [];
 
             // Feature compatibility: Add default values for missing properties
