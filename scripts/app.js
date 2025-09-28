@@ -19,7 +19,6 @@ class TaskFlow {
         this.currentCategoryFilter = 'all';
         this.currentSort = 'priority';
         this.currentSearch = '';
-
         this.initializeApp(); // Set up the application
         this.bindEvents(); // Attach event listeners
         this.renderTasks(); // Display existing tasks
@@ -144,7 +143,7 @@ class TaskFlow {
         // Feature 3: Get due date value
         const dueDateInput = document.getElementById('dueDateInput');
         const dueDate = dueDateInput.value || null;
-
+      
         // Create new task object with metadata and feature properties
         const newTask = {
             id: this.taskIdCounter++, // Unique identifier
@@ -244,6 +243,7 @@ class TaskFlow {
         const filteredTasks = this.getFilteredTasks();
         const sortedTasks = this.getSortedTasks(filteredTasks);
 
+
         // Generate HTML for each task with interactive elements and priority styling
         tasksList.innerHTML = sortedTasks.map(task => {
             const priority = task.priority || 'medium';
@@ -264,6 +264,7 @@ class TaskFlow {
                                     ${this.categories[task.category || 'personal']?.name || 'Personal'}
                                 </span>
                                 ${task.dueDate ? this.getDueDateBadge(task.dueDate) : ''}
+
                             </div>
                         </div>
                     </div>
@@ -346,6 +347,7 @@ class TaskFlow {
                 // Feature 3: Default due date if missing (reserved)
                 dueDate: task.dueDate || null
             }));
+
         } catch (error) {
             console.error('Failed to load tasks:', error);
             return []; // Return empty array on error to prevent app crash
