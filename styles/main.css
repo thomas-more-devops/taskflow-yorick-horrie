@@ -227,6 +227,21 @@ body {
     flex: 1; /* Take up available space */
 }
 
+/* Task info container (text + badges) */
+.task-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+/* Task badges container */
+.task-badges {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
 /* Custom checkbox styling for tasks */
 .task-checkbox {
     width: 20px;
@@ -450,4 +465,138 @@ body {
 /* Apply slide-in animation to task items */
 .task-item {
     animation: slideIn 0.3s ease; /* Smooth entry animation */
+}
+
+/* ================================
+   FEATURE 1: PRIORITY SYSTEM
+   ================================ */
+
+/* Input options grid layout */
+.input-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* 3 equal columns for all features */
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* Priority select dropdown styling */
+.priority-select {
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.priority-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Priority badge styling */
+.priority-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.priority-badge.high {
+    background: #fed7d7;
+    color: #c53030;
+}
+
+.priority-badge.medium {
+    background: #fef5e7;
+    color: #d69e2e;
+}
+
+.priority-badge.low {
+    background: #e6fffa;
+    color: #319795;
+}
+
+/* Priority-based task border colors */
+.task-item.priority-high {
+    border-left: 4px solid #e53e3e;
+}
+
+.task-item.priority-medium {
+    border-left: 4px solid #d69e2e;
+}
+
+.task-item.priority-low {
+    border-left: 4px solid #38a169;
+}
+
+/* ================================
+   FEATURE 2: CATEGORY SYSTEM (Reserved styles)
+   ================================ */
+
+/* Category select dropdown styling (hidden by default) */
+.category-select {
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.category-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* ================================
+   FEATURE 3: DUE DATE SYSTEM (Reserved styles)
+   ================================ */
+
+/* Date input container styling (hidden by default) */
+.date-input-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.date-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #4a5568;
+}
+
+.date-input {
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.date-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* ================================
+   RESPONSIVE DESIGN FOR NEW FEATURES
+   ================================ */
+
+/* Mobile responsive styles for input options */
+@media (max-width: 768px) {
+    .input-options {
+        grid-template-columns: 1fr; /* Single column on mobile */
+        gap: 0.75rem;
+    }
 }
