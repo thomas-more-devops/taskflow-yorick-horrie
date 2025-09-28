@@ -154,7 +154,7 @@ class TaskFlow {
             // Feature 1: Priority System
             priority: priority,
             // Feature 2: Category System
-            category: category
+            category: category,
             // Feature 3: Due Date System
             dueDate: dueDate
         };
