@@ -86,14 +86,18 @@ body {
     padding: 1.5rem;
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Elevated appearance */
-    display: flex;
-    gap: 1rem; /* Space between input and button */
+}
+
+/* FEATURE 3 ADDITION: Input options grid layout */
+.input-options {
+    display: grid;
+    grid-template-columns: 2fr 1fr auto; /* Text input takes most space, date medium, button auto */
+    gap: 1rem; /* Space between elements */
     align-items: center;
 }
 
 /* Main task input field styling */
 .task-input {
-    flex: 1; /* Take up available space */
     border: 2px solid #e2e8f0; /* Light gray border */
     border-radius: 12px;
     padding: 1rem 1.5rem;
@@ -113,6 +117,26 @@ body {
 
 .task-input::placeholder {
     color: #a0aec0;
+}
+
+/* FEATURE 3 ADDITION: Due date input styling */
+.due-date-input {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #f8fafc;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    color: #4a5568;
+}
+
+.due-date-input:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 /* Add task button with gradient background */
@@ -145,6 +169,53 @@ body {
 .add-icon {
     font-size: 1.2rem;
     font-weight: bold;
+}
+
+/* ================================
+   FEATURE 3 ADDITION: FILTER SECTION
+   ================================ */
+.filters-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.filter-container h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1rem;
+}
+
+.filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.filter-btn {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.filter-btn:hover {
+    border-color: #cbd5e0;
+    background: #edf2f7;
+}
+
+.filter-btn.active {
+    background: #667eea;
+    border-color: #667eea;
+    color: white;
 }
 
 /* ================================
@@ -203,6 +274,22 @@ body {
     justify-content: space-between; /* Content left, actions right */
     transition: all 0.3s ease; /* Smooth animations */
     cursor: pointer;
+}
+
+/* FEATURE 3 ADDITION: Overdue task styling with pulsing animation */
+.task-item.overdue {
+    border-left: 4px solid #e53e3e; /* Red left border for overdue tasks */
+    background: #fef5e7; /* Light orange background */
+    animation: pulse-overdue 2s ease-in-out infinite; /* Pulsing animation */
+}
+
+@keyframes pulse-overdue {
+    0%, 100% {
+        box-shadow: 0 4px 15px rgba(229, 62, 62, 0.1);
+    }
+    50% {
+        box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3);
+    }
 }
 
 /* Hover effect for task items with slide animation */
@@ -267,6 +354,50 @@ body {
 .task-item.completed .task-text {
     text-decoration: line-through; /* Cross out completed tasks */
     color: #718096; /* Muted gray color */
+}
+
+/* FEATURE 3 ADDITION: Due date badge styling */
+.due-date-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: auto; /* Push to the right */
+}
+
+.due-date-badge.due-overdue {
+    background: #fed7d7;
+    color: #c53030;
+    animation: pulse-badge 1.5s ease-in-out infinite;
+}
+
+.due-date-badge.due-today {
+    background: #feebc8;
+    color: #c05621;
+}
+
+.due-date-badge.due-tomorrow {
+    background: #e6fffa;
+    color: #285e61;
+}
+
+.due-date-badge.due-soon {
+    background: #ebf8ff;
+    color: #2c5282;
+}
+
+.due-date-badge.due-later {
+    background: #edf2f7;
+    color: #4a5568;
+}
+
+@keyframes pulse-badge {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
 }
 
 /* Container for task action buttons */
@@ -345,6 +476,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive columns */
     gap: 1rem; /* Space between stat cards */
+    margin-bottom: 2rem; /* FEATURE 3 ADDITION: Space for analytics below */
 }
 
 /* Individual statistic card styling */
@@ -372,6 +504,75 @@ body {
     font-weight: 500;
 }
 
+/* FEATURE 3 ADDITION: Detailed analytics section */
+.detailed-analytics {
+    border-top: 2px solid #f1f5f9;
+    padding-top: 1.5rem;
+}
+
+.analytics-section h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1rem;
+}
+
+.due-date-analytics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.due-date-stat {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.due-stat-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.due-stat-icon {
+    font-size: 1.25rem;
+}
+
+.due-stat-name {
+    font-weight: 600;
+    color: #2d3748;
+    flex: 1;
+}
+
+.due-stat-count {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.due-stat-count.overdue {
+    background: #fed7d7;
+    color: #c53030;
+}
+
+.due-stat-count.today {
+    background: #feebc8;
+    color: #c05621;
+}
+
+.due-stat-count.upcoming {
+    background: #ebf8ff;
+    color: #2c5282;
+}
+
+.due-stat-count.neutral {
+    background: #e2e8f0;
+    color: #4a5568;
+}
+
 /* ================================
    FOOTER SECTION
    ================================ */
@@ -397,13 +598,20 @@ body {
         font-size: 2rem; /* Smaller title on mobile */
     }
 
-    .input-container {
-        flex-direction: column; /* Stack input and button vertically */
-        align-items: stretch; /* Full width elements */
+    /* FEATURE 3 ADDITION: Responsive input grid */
+    .input-options {
+        grid-template-columns: 1fr; /* Single column on mobile */
+        gap: 1rem;
     }
 
-    .add-btn {
-        justify-content: center; /* Center button text */
+    /* FEATURE 3 ADDITION: Responsive filter buttons */
+    .filter-buttons {
+        justify-content: center;
+    }
+
+    .filter-btn {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
     }
 
     .task-item {
@@ -414,6 +622,11 @@ body {
         flex-direction: column; /* Stack header elements */
         gap: 1rem;
         align-items: flex-start;
+    }
+
+    /* FEATURE 3 ADDITION: Responsive due date analytics */
+    .due-date-analytics {
+        grid-template-columns: 1fr;
     }
 }
 
