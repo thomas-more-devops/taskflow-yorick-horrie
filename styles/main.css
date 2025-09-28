@@ -390,3 +390,87 @@ body {
 .task-item {
     animation: slideIn 0.3s ease;
 }
+
+/* ================================
+   FEATURE 1: PRIORITY SYSTEM
+   ================================ */
+
+/* Priority Input Container */
+.priority-input-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.priority-label {
+    font-weight: 500;
+    color: #4a5568;
+    min-width: 60px;
+}
+
+.priority-select {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.priority-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Priority Badge Styles */
+.priority-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 0.5rem;
+}
+
+.priority-badge.high {
+    background: #fed7d7;
+    color: #c53030;
+}
+
+.priority-badge.medium {
+    background: #fef5e7;
+    color: #d69e2e;
+}
+
+.priority-badge.low {
+    background: #e6fffa;
+    color: #319795;
+}
+
+/* Priority Task Border Colors */
+.task-item.priority-high {
+    border-left: 4px solid #e53e3e;
+}
+
+.task-item.priority-medium {
+    border-left: 4px solid #d69e2e;
+}
+
+.task-item.priority-low {
+    border-left: 4px solid #38a169;
+}
+
+/* Priority Statistics Card */
+.priority-stat-card {
+    background: linear-gradient(135deg, #fed7d7 0%, #fef5e7 100%);
+    border: 2px solid #e53e3e;
+}

@@ -28,6 +28,15 @@
                         Add Task
                     </button>
                 </div>
+                <!-- Feature 1: Priority Selection -->
+                <div class="priority-input-container">
+                    <label for="prioritySelect" class="priority-label">Priority:</label>
+                    <select id="prioritySelect" class="priority-select">
+                        <option value="medium">Medium Priority</option>
+                        <option value="high">High Priority</option>
+                        <option value="low">Low Priority</option>
+                    </select>
+                </div>
             </div>
 
             <div class="tasks-section">
@@ -58,6 +67,11 @@
                     <div class="stat-card">
                         <span class="stat-number" id="pendingTasks">0</span>
                         <span class="stat-label">Pending</span>
+                    </div>
+                    <!-- Feature 1: Priority Statistics -->
+                    <div class="stat-card priority-stat-card">
+                        <span class="stat-number" id="highPriorityTasks">0</span>
+                        <span class="stat-label">High Priority</span>
                     </div>
                 </div>
             </div>
