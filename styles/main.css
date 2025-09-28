@@ -390,3 +390,135 @@ body {
 .task-item {
     animation: slideIn 0.3s ease;
 }
+
+/* ================================
+   FEATURE 2: CATEGORY SYSTEM
+   ================================ */
+
+/* Category Input Section */
+.category-input-section {
+    margin-bottom: 2rem;
+}
+
+.category-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.category-label {
+    font-weight: 500;
+    color: #4a5568;
+    min-width: 80px;
+}
+
+.category-select {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.category-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Category Badge Styles */
+.category-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.category-badge.work {
+    background: rgba(49, 130, 206, 0.1);
+    color: #3182ce;
+}
+
+.category-badge.personal {
+    background: rgba(128, 90, 213, 0.1);
+    color: #805ad5;
+}
+
+.category-badge.shopping {
+    background: rgba(56, 161, 105, 0.1);
+    color: #38a169;
+}
+
+.category-badge.health {
+    background: rgba(229, 62, 62, 0.1);
+    color: #e53e3e;
+}
+
+.category-badge.study {
+    background: rgba(214, 158, 46, 0.1);
+    color: #d69e2e;
+}
+
+/* Category Analytics */
+.category-analytics {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.category-analytics h3 {
+    margin-bottom: 1rem;
+    color: #2d3748;
+    font-size: 1.1rem;
+}
+
+.category-breakdown {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.category-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    min-width: 120px;
+}
+
+.category-stat-icon {
+    font-size: 1.2rem;
+}
+
+.category-stat-name {
+    font-weight: 500;
+    color: #4a5568;
+}
+
+.category-stat-count {
+    font-weight: 600;
+    color: #667eea;
+    margin-left: auto;
+}
+
+/* Category Statistics Card */
+.category-stat-card {
+    background: linear-gradient(135deg, #e6fffa 0%, #f0fff4 100%);
+    border: 2px solid #38a169;
+}

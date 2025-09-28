@@ -2,6 +2,16 @@ class TaskFlow {
     constructor() {
         this.tasks = this.loadTasks();
         this.taskIdCounter = this.getNextTaskId();
+
+        // Feature 2: Category configuration
+        this.categoryConfig = {
+            work: { name: 'Work', icon: '💼', color: '#3182ce' },
+            personal: { name: 'Personal', icon: '🏠', color: '#805ad5' },
+            shopping: { name: 'Shopping', icon: '🛒', color: '#38a169' },
+            health: { name: 'Health', icon: '🏥', color: '#e53e3e' },
+            study: { name: 'Study', icon: '📚', color: '#d69e2e' }
+        };
+
         this.initializeApp();
         this.bindEvents();
         this.renderTasks();

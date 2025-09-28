@@ -59,6 +59,32 @@
                         <span class="stat-number" id="pendingTasks">0</span>
                         <span class="stat-label">Pending</span>
                     </div>
+                    <!-- Feature 2: Category Statistics -->
+                    <div class="stat-card category-stat-card">
+                        <span class="stat-number" id="activeCategories">0</span>
+                        <span class="stat-label">Categories</span>
+                    </div>
+                </div>
+                <!-- Feature 2: Category Analytics -->
+                <div class="category-analytics">
+                    <h3>Category Overview</h3>
+                    <div id="categoryBreakdown" class="category-breakdown">
+                        <!-- Category stats will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 2: Category Input Section -->
+            <div class="category-input-section">
+                <div class="category-container">
+                    <label for="categorySelect" class="category-label">Category:</label>
+                    <select id="categorySelect" class="category-select">
+                        <option value="personal">🏠 Personal</option>
+                        <option value="work">💼 Work</option>
+                        <option value="shopping">🛒 Shopping</option>
+                        <option value="health">🏥 Health</option>
+                        <option value="study">📚 Study</option>
+                    </select>
                 </div>
             </div>
         </main>
