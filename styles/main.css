@@ -148,6 +148,171 @@ body {
 }
 
 /* ================================
+   FEATURE 4 ADDITION: SEARCH & FILTER SECTION
+   ================================ */
+.search-filter-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.search-container h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1.5rem;
+}
+
+/* Search input with icon */
+.search-input-container {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.search-input {
+    width: 100%;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem 1.5rem 1rem 3rem;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #f8fafc;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-input::placeholder {
+    color: #a0aec0;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1rem;
+    color: #a0aec0;
+    pointer-events: none;
+}
+
+/* Filter controls layout */
+.filter-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    align-items: end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.filter-select {
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    font-family: inherit;
+    background: #f8fafc;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+}
+
+.clear-filters-btn {
+    background: #f7fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4a5568;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.clear-filters-btn:hover {
+    background: #edf2f7;
+    border-color: #cbd5e0;
+}
+
+/* Advanced filters toggle */
+.advanced-toggle {
+    margin-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 1rem;
+}
+
+.advanced-toggle-btn {
+    background: none;
+    border: none;
+    color: #667eea;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.advanced-toggle-btn:hover {
+    color: #5a67d8;
+}
+
+.toggle-icon {
+    transition: transform 0.3s ease;
+}
+
+/* Advanced filters panel */
+.advanced-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.advanced-panel.open {
+    max-height: 200px;
+}
+
+.advanced-content {
+    padding-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+/* Search highlighting */
+.search-highlight {
+    background: #fef5e7;
+    color: #c05621;
+    font-weight: 600;
+    padding: 0.1em 0.2em;
+    border-radius: 3px;
+}
+
+/* ================================
    TASKS DISPLAY SECTION
    ================================ */
 /* Main container for tasks list with glassmorphism */
@@ -162,7 +327,7 @@ body {
 /* Header section for tasks list with divider */
 .tasks-header {
     display: flex;
-    justify-content: space-between; /* Title on left, count on right */
+    justify-content: space-between; /* Title on left, summary on right */
     align-items: center;
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
@@ -173,6 +338,22 @@ body {
     font-size: 1.5rem;
     font-weight: 600;
     color: #2d3748;
+}
+
+/* FEATURE 4 ADDITION: Task summary with search results */
+.task-summary {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.search-results {
+    background: #ebf8ff;
+    color: #2c5282;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
 }
 
 /* Task count badge styling */
@@ -316,6 +497,20 @@ body {
     color: #718096; /* Muted gray text */
 }
 
+/* FEATURE 4 ADDITION: No search results state */
+.no-results-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #718096;
+    display: none;
+}
+
+.no-results-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+}
+
 /* Large icon for empty state */
 .empty-icon {
     font-size: 3rem; /* Large size for visual impact */
@@ -323,7 +518,8 @@ body {
 }
 
 /* Empty state heading */
-.empty-state h3 {
+.empty-state h3,
+.no-results-state h3 {
     font-size: 1.25rem;
     margin-bottom: 0.5rem;
     color: #4a5568; /* Slightly darker than body text */
@@ -406,6 +602,16 @@ body {
         justify-content: center; /* Center button text */
     }
 
+    /* FEATURE 4 ADDITION: Responsive filter controls */
+    .filter-controls {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .advanced-content {
+        grid-template-columns: 1fr;
+    }
+
     .task-item {
         padding: 1rem; /* Reduced padding for mobile */
     }
@@ -414,6 +620,11 @@ body {
         flex-direction: column; /* Stack header elements */
         gap: 1rem;
         align-items: flex-start;
+    }
+
+    .task-summary {
+        align-self: stretch;
+        justify-content: space-between;
     }
 }
 
@@ -429,6 +640,20 @@ body {
 
     .header-content {
         padding: 1.5rem; /* Reduced header padding */
+    }
+
+    .search-container h3 {
+        font-size: 1.1rem;
+    }
+
+    .filter-group label {
+        font-size: 0.8rem;
+    }
+
+    .filter-select,
+    .clear-filters-btn {
+        font-size: 0.8rem;
+        padding: 0.6rem;
     }
 }
 
@@ -450,4 +675,18 @@ body {
 /* Apply slide-in animation to task items */
 .task-item {
     animation: slideIn 0.3s ease; /* Smooth entry animation */
+}
+
+/* Pulse animation for search highlighting */
+@keyframes highlightPulse {
+    0%, 100% {
+        background: #fef5e7;
+    }
+    50% {
+        background: #fed7aa;
+    }
+}
+
+.search-highlight {
+    animation: highlightPulse 2s ease-in-out;
 }

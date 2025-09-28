@@ -4,6 +4,13 @@ class TaskFlow {
     constructor() {
         this.tasks = this.loadTasks(); // Load existing tasks from localStorage
         this.taskIdCounter = this.getNextTaskId(); // Get the next available task ID
+        // FEATURE 4 ADDITION: Search and filter state
+        this.searchQuery = '';
+        this.statusFilter = 'all';
+        this.sortOption = 'newest';
+        this.createdFilter = 'all';
+        this.lengthFilter = 'all';
+        this.advancedPanelOpen = false;
         this.initializeApp(); // Set up the application
         this.bindEvents(); // Attach event listeners
         this.renderTasks(); // Display existing tasks
@@ -38,8 +45,213 @@ class TaskFlow {
             }
         });
 
+        // FEATURE 4 ADDITION: Bind search and filter events
+        this.bindSearchAndFilters();
+
         // Focus on input when page loads for better UX
         taskInput.focus();
+    }
+
+    // FEATURE 4 ADDITION: Bind all search and filter event listeners
+    bindSearchAndFilters() {
+        // Search input
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            this.searchQuery = e.target.value;
+            this.applyFiltersAndRender();
+        });
+
+        // Filter controls
+        document.getElementById('statusFilter').addEventListener('change', (e) => {
+            this.statusFilter = e.target.value;
+            this.applyFiltersAndRender();
+        });
+
+        document.getElementById('sortOption').addEventListener('change', (e) => {
+            this.sortOption = e.target.value;
+            this.applyFiltersAndRender();
+        });
+
+        document.getElementById('createdFilter').addEventListener('change', (e) => {
+            this.createdFilter = e.target.value;
+            this.applyFiltersAndRender();
+        });
+
+        document.getElementById('lengthFilter').addEventListener('change', (e) => {
+            this.lengthFilter = e.target.value;
+            this.applyFiltersAndRender();
+        });
+
+        // Clear filters button
+        document.getElementById('clearFiltersBtn').addEventListener('click', () => {
+            this.clearAllFilters();
+        });
+
+        // Advanced panel toggle
+        document.getElementById('advancedToggle').addEventListener('click', () => {
+            this.toggleAdvancedPanel();
+        });
+    }
+
+    // FEATURE 4 ADDITION: Apply all filters and re-render tasks
+    applyFiltersAndRender() {
+        this.renderTasks();
+        this.updateStats();
+        this.updateSearchResults();
+    }
+
+    // FEATURE 4 ADDITION: Clear all search and filter options
+    clearAllFilters() {
+        this.searchQuery = '';
+        this.statusFilter = 'all';
+        this.sortOption = 'newest';
+        this.createdFilter = 'all';
+        this.lengthFilter = 'all';
+
+        // Reset UI elements
+        document.getElementById('searchInput').value = '';
+        document.getElementById('statusFilter').value = 'all';
+        document.getElementById('sortOption').value = 'newest';
+        document.getElementById('createdFilter').value = 'all';
+        document.getElementById('lengthFilter').value = 'all';
+
+        this.applyFiltersAndRender();
+        this.showNotification('Filters cleared', 'info');
+    }
+
+    // FEATURE 4 ADDITION: Toggle advanced filters panel
+    toggleAdvancedPanel() {
+        this.advancedPanelOpen = !this.advancedPanelOpen;
+        const panel = document.getElementById('advancedPanel');
+        const toggleIcon = document.querySelector('.toggle-icon');
+
+        if (this.advancedPanelOpen) {
+            panel.classList.add('open');
+            toggleIcon.textContent = '▲';
+        } else {
+            panel.classList.remove('open');
+            toggleIcon.textContent = '▼';
+        }
+    }
+
+    // FEATURE 4 ADDITION: Check if task matches search query
+    matchesSearch(task) {
+        if (!this.searchQuery) return true;
+        const query = this.searchQuery.toLowerCase();
+        return task.text.toLowerCase().includes(query);
+    }
+
+    // FEATURE 4 ADDITION: Check if task matches status filter
+    matchesStatusFilter(task) {
+        switch (this.statusFilter) {
+            case 'completed':
+                return task.completed;
+            case 'pending':
+                return !task.completed;
+            default:
+                return true;
+        }
+    }
+
+    // FEATURE 4 ADDITION: Check if task matches created date filter
+    matchesCreatedFilter(task) {
+        if (this.createdFilter === 'all') return true;
+
+        const taskDate = new Date(task.createdAt);
+        const now = new Date();
+
+        switch (this.createdFilter) {
+            case 'today':
+                return taskDate.toDateString() === now.toDateString();
+            case 'yesterday':
+                const yesterday = new Date(now);
+                yesterday.setDate(yesterday.getDate() - 1);
+                return taskDate.toDateString() === yesterday.toDateString();
+            case 'this-week':
+                const weekStart = new Date(now);
+                weekStart.setDate(now.getDate() - now.getDay());
+                weekStart.setHours(0, 0, 0, 0);
+                return taskDate >= weekStart;
+            case 'this-month':
+                return taskDate.getMonth() === now.getMonth() &&
+                       taskDate.getFullYear() === now.getFullYear();
+            default:
+                return true;
+        }
+    }
+
+    // FEATURE 4 ADDITION: Check if task matches length filter
+    matchesLengthFilter(task) {
+        const length = task.text.length;
+        switch (this.lengthFilter) {
+            case 'short':
+                return length < 20;
+            case 'medium':
+                return length >= 20 && length <= 50;
+            case 'long':
+                return length > 50;
+            default:
+                return true;
+        }
+    }
+
+    // FEATURE 4 ADDITION: Get filtered and sorted tasks
+    getFilteredTasks() {
+        return this.tasks
+            .filter(task =>
+                this.matchesSearch(task) &&
+                this.matchesStatusFilter(task) &&
+                this.matchesCreatedFilter(task) &&
+                this.matchesLengthFilter(task)
+            )
+            .sort((a, b) => this.sortTasks(a, b));
+    }
+
+    // FEATURE 4 ADDITION: Sort tasks based on current sort option
+    sortTasks(a, b) {
+        switch (this.sortOption) {
+            case 'oldest':
+                return new Date(a.createdAt) - new Date(b.createdAt);
+            case 'alphabetical':
+                return a.text.toLowerCase().localeCompare(b.text.toLowerCase());
+            case 'reverse-alphabetical':
+                return b.text.toLowerCase().localeCompare(a.text.toLowerCase());
+            default: // 'newest'
+                return new Date(b.createdAt) - new Date(a.createdAt);
+        }
+    }
+
+    // FEATURE 4 ADDITION: Highlight search terms in text
+    highlightSearchTerm(text) {
+        if (!this.searchQuery) return this.escapeHtml(text);
+
+        const escapedText = this.escapeHtml(text);
+        const escapedQuery = this.escapeHtml(this.searchQuery);
+        const regex = new RegExp(`(${escapedQuery})`, 'gi');
+        return escapedText.replace(regex, '<mark class="search-highlight">$1</mark>');
+    }
+
+    // FEATURE 4 ADDITION: Update search results summary
+    updateSearchResults() {
+        const searchResults = document.getElementById('searchResults');
+        const filteredTasks = this.getFilteredTasks();
+        const totalTasks = this.tasks.length;
+
+        if (this.hasActiveFilters()) {
+            searchResults.textContent = `${filteredTasks.length} of ${totalTasks} tasks shown`;
+            searchResults.style.display = 'inline';
+        } else {
+            searchResults.style.display = 'none';
+        }
+    }
+
+    // FEATURE 4 ADDITION: Check if any filters are active
+    hasActiveFilters() {
+        return this.searchQuery !== '' ||
+               this.statusFilter !== 'all' ||
+               this.sortOption !== 'newest' ||
+               this.createdFilter !== 'all' ||
+               this.lengthFilter !== 'all';
     }
 
     // Create a new task and add it to the task list
@@ -128,34 +340,39 @@ class TaskFlow {
     renderTasks() {
         const tasksList = document.getElementById('tasksList');
         const emptyState = document.getElementById('emptyState');
+        const noResultsState = document.getElementById('noResultsState'); // FEATURE 4 ADDITION
 
-        // Show empty state if no tasks exist
+        // FEATURE 4 ADDITION: Use filtered tasks
+        const filteredTasks = this.getFilteredTasks();
+
+        // Show appropriate state based on tasks and filters
         if (this.tasks.length === 0) {
+            // No tasks at all
             tasksList.style.display = 'none';
             emptyState.style.display = 'block';
+            noResultsState.style.display = 'none'; // FEATURE 4 ADDITION
+            return;
+        } else if (filteredTasks.length === 0) {
+            // FEATURE 4 ADDITION: No tasks match filters
+            tasksList.style.display = 'none';
+            emptyState.style.display = 'none';
+            noResultsState.style.display = 'block';
             return;
         }
 
-        // Show task list and hide empty state
+        // Show task list and hide empty states
         tasksList.style.display = 'flex';
         emptyState.style.display = 'none';
-
-        // Sort tasks: incomplete first, then by creation date (newest first)
-        const sortedTasks = [...this.tasks].sort((a, b) => {
-            if (a.completed !== b.completed) {
-                return a.completed - b.completed; // Incomplete tasks first
-            }
-            return new Date(b.createdAt) - new Date(a.createdAt); // Newest first within same completion status
-        });
+        noResultsState.style.display = 'none'; // FEATURE 4 ADDITION
 
         // Generate HTML for each task with interactive elements
-        tasksList.innerHTML = sortedTasks.map(task => `
+        tasksList.innerHTML = filteredTasks.map(task => `
             <div class="task-item ${task.completed ? 'completed' : ''}" data-task-id="${task.id}">
                 <div class="task-content">
                     <div class="task-checkbox ${task.completed ? 'checked' : ''}"
                          onclick="taskFlow.toggleTask(${task.id})">
                     </div>
-                    <span class="task-text">${this.escapeHtml(task.text)}</span>
+                    <span class="task-text">${this.highlightSearchTerm(task.text)}</span>
                 </div>
                 <div class="task-actions">
                     <button class="task-btn edit-btn" onclick="taskFlow.editTask(${task.id})" title="Edit task">
@@ -171,18 +388,25 @@ class TaskFlow {
 
     // Update statistics display with current task counts
     updateStats() {
+        // FEATURE 4 ADDITION: Use filtered tasks for display
+        const filteredTasks = this.getFilteredTasks();
         const totalTasks = this.tasks.length;
         const completedTasks = this.tasks.filter(task => task.completed).length;
         const pendingTasks = totalTasks - completedTasks;
+        const filteredCount = filteredTasks.length; // FEATURE 4 ADDITION
 
         // Update statistics counters in the UI
         document.getElementById('totalTasks').textContent = totalTasks;
         document.getElementById('completedTasks').textContent = completedTasks;
         document.getElementById('pendingTasks').textContent = pendingTasks;
+        document.getElementById('filteredTasks').textContent = filteredCount; // FEATURE 4 ADDITION
 
         // Update task count in header with proper singular/plural handling
         const taskCount = document.getElementById('taskCount');
-        taskCount.textContent = `${totalTasks} ${totalTasks === 1 ? 'task' : 'tasks'}`;
+        taskCount.textContent = `${filteredCount} ${filteredCount === 1 ? 'task' : 'tasks'}`;
+
+        // FEATURE 4 ADDITION: Update search results
+        this.updateSearchResults();
     }
 
     // Save tasks and counter to localStorage with error handling
@@ -316,10 +540,16 @@ class TaskFlow {
     // Calculate detailed statistics about tasks for analytics
     getTaskStats() {
         const now = new Date();
+        const filteredTasks = this.getFilteredTasks(); // FEATURE 4 ADDITION
+
         const stats = {
             total: this.tasks.length,
             completed: this.tasks.filter(t => t.completed).length,
             pending: this.tasks.filter(t => !t.completed).length,
+            // FEATURE 4 ADDITION: Filtered results stats
+            filtered: filteredTasks.length,
+            searchQuery: this.searchQuery,
+            activeFilters: this.hasActiveFilters(),
             // Tasks created today
             createdToday: this.tasks.filter(t => {
                 const taskDate = new Date(t.createdAt);
