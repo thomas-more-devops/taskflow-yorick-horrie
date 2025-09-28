@@ -24,6 +24,13 @@
                 <div class="input-container">
                     <input type="text" id="taskInput" placeholder="What needs to be done?" class="task-input">
                     <div class="input-options">
+                        <select id="categorySelect" class="category-select">
+                            <option value="personal">📝 Personal</option>
+                            <option value="work">💼 Work</option>
+                            <option value="shopping">🛒 Shopping</option>
+                            <option value="health">🏥 Health</option>
+                            <option value="study">📚 Study</option>
+                      </select>
                         <select id="prioritySelect" class="priority-select">
                             <option value="medium">Medium Priority</option>
                             <option value="high">High Priority</option>
@@ -33,6 +40,37 @@
                     <button id="addTaskBtn" class="add-btn">
                         <span class="add-icon">+</span>
                         Add Task
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category Filter Section -->
+            <div class="category-filters">
+                <h3>Filter by Category:</h3>
+                <div class="category-filter-buttons">
+                    <button class="category-filter-btn active" data-category="all">
+                        <span class="filter-icon">🔍</span>
+                        All Categories
+                    </button>
+                    <button class="category-filter-btn" data-category="work">
+                        <span class="filter-icon">💼</span>
+                        Work
+                    </button>
+                    <button class="category-filter-btn" data-category="personal">
+                        <span class="filter-icon">📝</span>
+                        Personal
+                    </button>
+                    <button class="category-filter-btn" data-category="shopping">
+                        <span class="filter-icon">🛒</span>
+                        Shopping
+                    </button>
+                    <button class="category-filter-btn" data-category="health">
+                        <span class="filter-icon">🏥</span>
+                        Health
+                    </button>
+                    <button class="category-filter-btn" data-category="study">
+                        <span class="filter-icon">📚</span>
+                        Study
                     </button>
                 </div>
             </div>
@@ -66,10 +104,22 @@
                         <span class="stat-number" id="pendingTasks">0</span>
                         <span class="stat-label">Pending</span>
                     </div>
-                    <div class="stat-card priority-stats">
+                   <div class="stat-card priority-stats">
                         <span class="stat-number" id="highPriorityTasks">0</span>
                         <span class="stat-label">High Priority</span>
                     </div>
+                    <div class="stat-card category-stats">
+                        <span class="stat-number" id="categoriesUsed">0</span>
+                        <span class="stat-label">Categories</span>
+                    </div>
+                </div>
+
+                <div class="detailed-analytics">
+                    <div class="analytics-section">
+                        <h3>Category Breakdown</h3>
+                        <div id="categoryStats" class="category-stats-list">
+                            <!-- Category statistics will be populated here -->
+                        </div>                   
                 </div>
             </div>
         </main>
