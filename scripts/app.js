@@ -4,6 +4,7 @@ class TaskFlow {
     constructor() {
         this.tasks = this.loadTasks(); // Load existing tasks from localStorage
         this.taskIdCounter = this.getNextTaskId(); // Get the next available task ID
+        this.currentCategoryFilter = 'all'; // FEATURE 2 ADDITION: Track current category filter
         this.initializeApp(); // Set up the application
         this.bindEvents(); // Attach event listeners
         this.renderTasks(); // Display existing tasks
@@ -38,13 +39,42 @@ class TaskFlow {
             }
         });
 
+        // FEATURE 2 ADDITION: Bind category filter events
+        this.bindCategoryFilters();
+
         // Focus on input when page loads for better UX
         taskInput.focus();
+    }
+
+    // FEATURE 2 ADDITION: Bind category filter button events
+    bindCategoryFilters() {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                this.setActiveCategoryFilter(e.target.dataset.category);
+            });
+        });
+    }
+
+    // FEATURE 2 ADDITION: Set active category filter and update UI
+    setActiveCategoryFilter(category) {
+        this.currentCategoryFilter = category;
+
+        // Update active button styling
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`[data-category="${category}"]`).classList.add('active');
+
+        // Re-render tasks with new filter
+        this.renderTasks();
+        this.updateStats();
     }
 
     // Create a new task and add it to the task list
     addTask() {
         const taskInput = document.getElementById('taskInput');
+        const categorySelect = document.getElementById('categorySelect'); // FEATURE 2 ADDITION
         const taskText = taskInput.value.trim();
 
         // Validate input - don't allow empty tasks
@@ -58,6 +88,7 @@ class TaskFlow {
         const newTask = {
             id: this.taskIdCounter++, // Unique identifier
             text: taskText, // Task description
+            category: categorySelect.value, // FEATURE 2 ADDITION: Task category
             completed: false, // Completion status
             createdAt: new Date().toISOString(), // Creation timestamp
             completedAt: null // Completion timestamp (null until completed)
@@ -71,6 +102,7 @@ class TaskFlow {
 
         // Clear input and refocus for next task
         taskInput.value = '';
+        categorySelect.value = 'personal'; // FEATURE 2 ADDITION: Reset category to default
         taskInput.focus();
 
         this.showNotification('Task added successfully!', 'success');
@@ -124,15 +156,51 @@ class TaskFlow {
         }
     }
 
+    // FEATURE 2 ADDITION: Get category display info with icon and color
+    getCategoryInfo(category) {
+        const categoryMap = {
+            personal: { label: 'Personal', icon: '👤', class: 'category-personal' },
+            work: { label: 'Work', icon: '💼', class: 'category-work' },
+            shopping: { label: 'Shopping', icon: '🛒', class: 'category-shopping' },
+            health: { label: 'Health', icon: '🏥', class: 'category-health' },
+            study: { label: 'Study', icon: '📚', class: 'category-study' }
+        };
+        return categoryMap[category] || categoryMap.personal;
+    }
+
+    // FEATURE 2 ADDITION: Filter tasks based on current category filter
+    getFilteredTasks() {
+        if (this.currentCategoryFilter === 'all') {
+            return this.tasks;
+        }
+        return this.tasks.filter(task => task.category === this.currentCategoryFilter);
+    }
+
     // Render all tasks in the UI with proper sorting and styling
     renderTasks() {
         const tasksList = document.getElementById('tasksList');
         const emptyState = document.getElementById('emptyState');
 
+        // FEATURE 2 ADDITION: Use filtered tasks instead of all tasks
+        const filteredTasks = this.getFilteredTasks();
+
         // Show empty state if no tasks exist
-        if (this.tasks.length === 0) {
+        if (filteredTasks.length === 0) {
             tasksList.style.display = 'none';
             emptyState.style.display = 'block';
+
+            // Update empty state message based on filter
+            const emptyTitle = emptyState.querySelector('h3');
+            const emptyText = emptyState.querySelector('p');
+
+            if (this.currentCategoryFilter === 'all') {
+                emptyTitle.textContent = 'No tasks yet';
+                emptyText.textContent = 'Add your first task above to get started!';
+            } else {
+                const categoryInfo = this.getCategoryInfo(this.currentCategoryFilter);
+                emptyTitle.textContent = `No ${categoryInfo.label.toLowerCase()} tasks`;
+                emptyText.textContent = `Add a ${categoryInfo.label.toLowerCase()} task to get started!`;
+            }
             return;
         }
 
@@ -141,7 +209,7 @@ class TaskFlow {
         emptyState.style.display = 'none';
 
         // Sort tasks: incomplete first, then by creation date (newest first)
-        const sortedTasks = [...this.tasks].sort((a, b) => {
+        const sortedTasks = [...filteredTasks].sort((a, b) => {
             if (a.completed !== b.completed) {
                 return a.completed - b.completed; // Incomplete tasks first
             }
@@ -149,13 +217,16 @@ class TaskFlow {
         });
 
         // Generate HTML for each task with interactive elements
-        tasksList.innerHTML = sortedTasks.map(task => `
-            <div class="task-item ${task.completed ? 'completed' : ''}" data-task-id="${task.id}">
+        tasksList.innerHTML = sortedTasks.map(task => {
+            const categoryInfo = this.getCategoryInfo(task.category); // FEATURE 2 ADDITION
+            return `
+            <div class="task-item ${task.completed ? 'completed' : ''} ${categoryInfo.class}" data-task-id="${task.id}">
                 <div class="task-content">
                     <div class="task-checkbox ${task.completed ? 'checked' : ''}"
                          onclick="taskFlow.toggleTask(${task.id})">
                     </div>
                     <span class="task-text">${this.escapeHtml(task.text)}</span>
+                    <span class="category-badge ${categoryInfo.class}">${categoryInfo.icon} ${categoryInfo.label}</span>
                 </div>
                 <div class="task-actions">
                     <button class="task-btn edit-btn" onclick="taskFlow.editTask(${task.id})" title="Edit task">
@@ -166,23 +237,65 @@ class TaskFlow {
                     </button>
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
+    }
+
+    // FEATURE 2 ADDITION: Update category analytics display
+    updateCategoryAnalytics() {
+        const categoryAnalytics = document.getElementById('categoryAnalytics');
+        const categories = ['personal', 'work', 'shopping', 'health', 'study'];
+
+        const analyticsHTML = categories.map(category => {
+            const categoryInfo = this.getCategoryInfo(category);
+            const categoryTasks = this.tasks.filter(task => task.category === category);
+            const completedTasks = categoryTasks.filter(task => task.completed).length;
+            const totalTasks = categoryTasks.length;
+            const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+            return `
+                <div class="category-stat ${categoryInfo.class}">
+                    <div class="category-header">
+                        <span class="category-icon">${categoryInfo.icon}</span>
+                        <span class="category-name">${categoryInfo.label}</span>
+                        <span class="category-count">${totalTasks}</span>
+                    </div>
+                    <div class="category-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                        <span class="progress-text">${completedTasks}/${totalTasks} (${progress}%)</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        categoryAnalytics.innerHTML = analyticsHTML;
     }
 
     // Update statistics display with current task counts
     updateStats() {
-        const totalTasks = this.tasks.length;
-        const completedTasks = this.tasks.filter(task => task.completed).length;
+        // FEATURE 2 ADDITION: Use filtered tasks for display stats but all tasks for actual counts
+        const filteredTasks = this.getFilteredTasks();
+        const totalTasks = filteredTasks.length;
+        const completedTasks = filteredTasks.filter(task => task.completed).length;
         const pendingTasks = totalTasks - completedTasks;
+
+        // FEATURE 2 ADDITION: Calculate categories used from all tasks
+        const categoriesUsed = new Set(this.tasks.map(task => task.category)).size;
 
         // Update statistics counters in the UI
         document.getElementById('totalTasks').textContent = totalTasks;
         document.getElementById('completedTasks').textContent = completedTasks;
         document.getElementById('pendingTasks').textContent = pendingTasks;
+        document.getElementById('categoriesUsed').textContent = categoriesUsed; // FEATURE 2 ADDITION
 
         // Update task count in header with proper singular/plural handling
         const taskCount = document.getElementById('taskCount');
         taskCount.textContent = `${totalTasks} ${totalTasks === 1 ? 'task' : 'tasks'}`;
+
+        // FEATURE 2 ADDITION: Update category analytics
+        this.updateCategoryAnalytics();
     }
 
     // Save tasks and counter to localStorage with error handling
@@ -202,7 +315,13 @@ class TaskFlow {
         try {
             const saved = localStorage.getItem('taskflow_tasks');
             // Parse saved tasks or return empty array if none exist
-            return saved ? JSON.parse(saved) : [];
+            const tasks = saved ? JSON.parse(saved) : [];
+
+            // FEATURE 2 ADDITION: Add category field to existing tasks that don't have it
+            return tasks.map(task => ({
+                ...task,
+                category: task.category || 'personal' // Default to personal category for backward compatibility
+            }));
         } catch (error) {
             console.error('Failed to load tasks:', error);
             return []; // Return empty array on error to prevent app crash
@@ -320,6 +439,15 @@ class TaskFlow {
             total: this.tasks.length,
             completed: this.tasks.filter(t => t.completed).length,
             pending: this.tasks.filter(t => !t.completed).length,
+            // FEATURE 2 ADDITION: Category-based statistics
+            byCategory: {
+                personal: this.tasks.filter(t => t.category === 'personal').length,
+                work: this.tasks.filter(t => t.category === 'work').length,
+                shopping: this.tasks.filter(t => t.category === 'shopping').length,
+                health: this.tasks.filter(t => t.category === 'health').length,
+                study: this.tasks.filter(t => t.category === 'study').length
+            },
+            categoriesUsed: new Set(this.tasks.map(t => t.category)).size,
             // Tasks created today
             createdToday: this.tasks.filter(t => {
                 const taskDate = new Date(t.createdAt);
