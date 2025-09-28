@@ -2,6 +2,7 @@ class TaskFlow {
     constructor() {
         this.tasks = this.loadTasks();
         this.taskIdCounter = this.getNextTaskId();
+        this.currentCategoryFilter = 'all';
         this.initializeApp();
         this.bindEvents();
         this.renderTasks();
@@ -24,11 +25,18 @@ class TaskFlow {
         const taskInput = document.getElementById('taskInput');
 
         addTaskBtn.addEventListener('click', () => this.addTask());
-        
+
         taskInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 this.addTask();
             }
+        });
+
+        // Category filter buttons
+        document.querySelectorAll('.category-filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.setCategoryFilter(e.target.dataset.category);
+            });
         });
 
         // Focus on input when page loads
@@ -37,7 +45,9 @@ class TaskFlow {
 
     addTask() {
         const taskInput = document.getElementById('taskInput');
+        const categorySelect = document.getElementById('categorySelect');
         const taskText = taskInput.value.trim();
+        const category = categorySelect.value;
 
         if (taskText === '') {
             this.showNotification('Please enter a task description', 'warning');
@@ -48,6 +58,7 @@ class TaskFlow {
         const newTask = {
             id: this.taskIdCounter++,
             text: taskText,
+            category: category,
             completed: false,
             createdAt: new Date().toISOString(),
             completedAt: null
@@ -57,10 +68,11 @@ class TaskFlow {
         this.saveTasks();
         this.renderTasks();
         this.updateStats();
-        
+
         taskInput.value = '';
+        categorySelect.value = 'personal';
         taskInput.focus();
-        
+
         this.showNotification('Task added successfully!', 'success');
     }
 
@@ -82,7 +94,7 @@ class TaskFlow {
             this.saveTasks();
             this.renderTasks();
             this.updateStats();
-            
+
             const message = task.completed ? 'Task completed! 🎉' : 'Task marked as pending';
             this.showNotification(message, 'success');
         }
@@ -101,11 +113,57 @@ class TaskFlow {
         }
     }
 
+    setCategoryFilter(category) {
+        this.currentCategoryFilter = category;
+
+        // Update button states
+        document.querySelectorAll('.category-filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`[data-category="${category}"]`).classList.add('active');
+
+        this.renderTasks();
+    }
+
+    matchesCategoryFilter(task) {
+        if (this.currentCategoryFilter === 'all') {
+            return true;
+        }
+        return task.category === this.currentCategoryFilter;
+    }
+
+    getFilteredTasks() {
+        return this.tasks.filter(task => this.matchesCategoryFilter(task));
+    }
+
+    getCategoryIcon(category) {
+        const icons = {
+            work: '💼',
+            personal: '📝',
+            shopping: '🛒',
+            health: '🏥',
+            study: '📚'
+        };
+        return icons[category] || '📝';
+    }
+
+    getCategoryColor(category) {
+        const colors = {
+            work: '#3182ce',
+            personal: '#38a169',
+            shopping: '#ed8936',
+            health: '#e53e3e',
+            study: '#805ad5'
+        };
+        return colors[category] || '#38a169';
+    }
+
     renderTasks() {
         const tasksList = document.getElementById('tasksList');
         const emptyState = document.getElementById('emptyState');
+        const filteredTasks = this.getFilteredTasks();
 
-        if (this.tasks.length === 0) {
+        if (filteredTasks.length === 0) {
             tasksList.style.display = 'none';
             emptyState.style.display = 'block';
             return;
@@ -114,21 +172,32 @@ class TaskFlow {
         tasksList.style.display = 'flex';
         emptyState.style.display = 'none';
 
-        // Sort tasks: incomplete first, then by creation date
-        const sortedTasks = [...this.tasks].sort((a, b) => {
+        // Sort tasks: incomplete first, then by category, then by creation date
+        const sortedTasks = [...filteredTasks].sort((a, b) => {
+            // First sort by completion status
             if (a.completed !== b.completed) {
                 return a.completed - b.completed;
             }
+
+            // Then sort by category
+            if (a.category !== b.category) {
+                return a.category.localeCompare(b.category);
+            }
+
+            // Finally sort by creation date (newest first)
             return new Date(b.createdAt) - new Date(a.createdAt);
         });
 
         tasksList.innerHTML = sortedTasks.map(task => `
-            <div class="task-item ${task.completed ? 'completed' : ''}" data-task-id="${task.id}">
+            <div class="task-item ${task.completed ? 'completed' : ''} category-${task.category}" data-task-id="${task.id}">
                 <div class="task-content">
-                    <div class="task-checkbox ${task.completed ? 'checked' : ''}" 
+                    <div class="task-checkbox ${task.completed ? 'checked' : ''}"
                          onclick="taskFlow.toggleTask(${task.id})">
                     </div>
                     <span class="task-text">${this.escapeHtml(task.text)}</span>
+                    <span class="category-badge category-${task.category}" style="background-color: ${this.getCategoryColor(task.category)}">
+                        ${this.getCategoryIcon(task.category)} ${task.category.charAt(0).toUpperCase() + task.category.slice(1)}
+                    </span>
                 </div>
                 <div class="task-actions">
                     <button class="task-btn edit-btn" onclick="taskFlow.editTask(${task.id})" title="Edit task">
@@ -146,14 +215,59 @@ class TaskFlow {
         const totalTasks = this.tasks.length;
         const completedTasks = this.tasks.filter(task => task.completed).length;
         const pendingTasks = totalTasks - completedTasks;
+        const categoriesUsed = new Set(this.tasks.map(task => task.category)).size;
 
         document.getElementById('totalTasks').textContent = totalTasks;
         document.getElementById('completedTasks').textContent = completedTasks;
         document.getElementById('pendingTasks').textContent = pendingTasks;
-        
+        document.getElementById('categoriesUsed').textContent = categoriesUsed;
+
         // Update task count in header
         const taskCount = document.getElementById('taskCount');
         taskCount.textContent = `${totalTasks} ${totalTasks === 1 ? 'task' : 'tasks'}`;
+
+        // Update category statistics
+        this.updateCategoryStats();
+    }
+
+    updateCategoryStats() {
+        const categoryStats = document.getElementById('categoryStats');
+        const categories = ['work', 'personal', 'shopping', 'health', 'study'];
+
+        const categoryData = categories.map(category => {
+            const total = this.tasks.filter(task => task.category === category).length;
+            const completed = this.tasks.filter(task => task.category === category && task.completed).length;
+            const pending = total - completed;
+
+            return {
+                category,
+                total,
+                completed,
+                pending,
+                icon: this.getCategoryIcon(category),
+                color: this.getCategoryColor(category)
+            };
+        }).filter(data => data.total > 0);
+
+        categoryStats.innerHTML = categoryData.map(data => `
+            <div class="category-stat-item">
+                <div class="category-stat-header">
+                    <span class="category-icon">${data.icon}</span>
+                    <span class="category-name">${data.category.charAt(0).toUpperCase() + data.category.slice(1)}</span>
+                    <span class="category-total">${data.total}</span>
+                </div>
+                <div class="category-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${data.total ? (data.completed / data.total) * 100 : 0}%; background-color: ${data.color}"></div>
+                    </div>
+                    <span class="progress-text">${data.completed}/${data.total} completed</span>
+                </div>
+            </div>
+        `).join('');
+
+        if (categoryData.length === 0) {
+            categoryStats.innerHTML = '<p class="no-categories">No tasks with categories yet.</p>';
+        }
     }
 
     saveTasks() {
@@ -169,7 +283,13 @@ class TaskFlow {
     loadTasks() {
         try {
             const saved = localStorage.getItem('taskflow_tasks');
-            return saved ? JSON.parse(saved) : [];
+            const tasks = saved ? JSON.parse(saved) : [];
+
+            // Add default category to existing tasks for backward compatibility
+            return tasks.map(task => ({
+                ...task,
+                category: task.category || 'personal'
+            }));
         } catch (error) {
             console.error('Failed to load tasks:', error);
             return [];
@@ -198,7 +318,7 @@ class TaskFlow {
     showNotification(message, type = 'info') {
         // Simple notification system
         console.log(`[${type.toUpperCase()}] ${message}`);
-        
+
         // Create notification element
         const notification = document.createElement('div');
         notification.style.cssText = `
@@ -224,18 +344,18 @@ class TaskFlow {
             warning: '#ed8936',
             info: '#3182ce'
         };
-        
+
         notification.style.background = colors[type] || colors.info;
         notification.textContent = message;
-        
+
         document.body.appendChild(notification);
-        
+
         // Animate in
         setTimeout(() => {
             notification.style.opacity = '1';
             notification.style.transform = 'translateY(0)';
         }, 100);
-        
+
         // Remove after 3 seconds
         setTimeout(() => {
             notification.style.opacity = '0';
@@ -251,12 +371,12 @@ class TaskFlow {
         const dataStr = JSON.stringify(this.tasks, null, 2);
         const dataBlob = new Blob([dataStr], {type: 'application/json'});
         const url = URL.createObjectURL(dataBlob);
-        
+
         const link = document.createElement('a');
         link.href = url;
         link.download = 'taskflow_backup.json';
         link.click();
-        
+
         URL.revokeObjectURL(url);
         this.showNotification('Tasks exported successfully!', 'success');
     }
@@ -273,10 +393,22 @@ class TaskFlow {
 
     getTaskStats() {
         const now = new Date();
+        const categoryBreakdown = {};
+
+        ['work', 'personal', 'shopping', 'health', 'study'].forEach(category => {
+            categoryBreakdown[category] = {
+                total: this.tasks.filter(t => t.category === category).length,
+                completed: this.tasks.filter(t => t.category === category && t.completed).length,
+                pending: this.tasks.filter(t => t.category === category && !t.completed).length
+            };
+        });
+
         const stats = {
             total: this.tasks.length,
             completed: this.tasks.filter(t => t.completed).length,
             pending: this.tasks.filter(t => !t.completed).length,
+            categoriesUsed: new Set(this.tasks.map(t => t.category)).size,
+            categoryBreakdown,
             createdToday: this.tasks.filter(t => {
                 const taskDate = new Date(t.createdAt);
                 return taskDate.toDateString() === now.toDateString();
