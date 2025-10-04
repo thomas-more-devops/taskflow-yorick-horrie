@@ -262,10 +262,6 @@ This TaskFlow application demonstrates:
 ## 🎯 Future Enhancements
 
 Potential improvements for version 2.0:
-- [ ] **Task Categories**: Color-coded categories (Work, Personal, Shopping)
-- [ ] **Due Dates**: Calendar integration and deadline reminders
-- [ ] **Priority Levels**: High, Medium, Low priority sorting
-- [ ] **Search & Filter**: Advanced task filtering capabilities
 - [ ] **Dark Mode**: Toggle between light and dark themes
 - [ ] **Collaboration**: Share tasks with team members
 - [ ] **Sync**: Cloud synchronization across devices
@@ -280,12 +276,18 @@ Potential improvements for version 2.0:
 
 ## 📈 Version History
 
-### v1.0.0 (Current)
+### v1.0.0
 - ✨ Initial release with core functionality
 - 🎨 Modern, responsive design
 - 💾 Local storage persistence
 - 📊 Basic statistics tracking
 - 🔧 Complete CRUD operations
+
+### v2.0.0 (Current)
+- Task Categories: Color-coded categories (Work, Personal, Shopping)
+- Due Dates: Calendar integration and deadline reminders
+- Priority Levels: High, Medium, Low priority sorting
+- Search & Filter: Advanced task filtering capabilities
 
 ---
 
