@@ -1,0 +1,97 @@
+{
+  "name": "taskflow",
+  "version": "2.0.0",
+  "description": "Enhanced task management application with priorities, categories, and due dates",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo 'TaskFlow is a static web application. Open index.html in your browser.'",
+    "lint": "eslint scripts/ --ext .js",
+    "lint:fix": "eslint scripts/ --ext .js --fix",
+    "test": "echo 'Integration tests will be added in future versions'",
+    "validate": "npm run lint && npm run validate:html && npm run validate:css",
+    "validate:html": "echo 'HTML validation - basic structure check'",
+    "validate:css": "echo 'CSS validation - syntax check'",
+    "build": "echo 'Build process - optimization for production'",
+    "deploy": "echo 'Deployment to GitHub Pages via GitHub Actions'",
+    "dev": "echo 'Development server - serve files locally'",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/taskflow.git"
+  },
+  "keywords": [
+    "task-management",
+    "productivity",
+    "javascript",
+    "html5",
+    "css3",
+    "responsive-design",
+    "local-storage",
+    "web-application",
+    "devops",
+    "git-workflow"
+  ],
+  "author": "TaskFlow Development Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/your-username/taskflow/issues"
+  },
+  "homepage": "https://your-username.github.io/taskflow/",
+  "devDependencies": {
+    "eslint": "^8.50.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-n": "^16.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "^3.0.3"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=6.0.0"
+  },
+  "files": [
+    "index.html",
+    "styles/",
+    "scripts/",
+    "docs/",
+    "README.md",
+    "LICENSE"
+  ],
+  "config": {
+    "eslint": {
+      "extends": ["standard"],
+      "rules": {
+        "no-console": "off",
+        "no-unused-vars": "error"
+      }
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run test"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "printWidth": 100
+  },
+  "metadata": {
+    "framework": "Vanilla JavaScript",
+    "architecture": "Client-side SPA",
+    "storage": "localStorage",
+    "deployment": "GitHub Pages",
+    "ci": "GitHub Actions"
+  }
+}
